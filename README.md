@@ -1,3 +1,4 @@
+Edició repositori 
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/nMSQJoxi)
 # **Final Project: Build a Full-Stack Web Application** 
 ## **Introduction**
@@ -47,7 +48,7 @@ These mechanisms can be implemented in several ways, such as:
 
 The important part is that the **data flow** between the back-end and the front-end remains secure, well-structured, and easy to maintain.
 
-## Backend \- Requirements 
+## Backend \- Requirements
 
 ### **DataBase ** 
 
