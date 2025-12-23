@@ -23,6 +23,18 @@ services:
             - sail
         depends_on:
             - mysql
+    phpmyadmin:
+            container_name: phpmyadmin_laravel_final_project
+            depends_on:
+                - mysql
+            image: phpmyadmin/phpmyadmin
+            ports:
+                - 8090:80
+            environment: 
+                PMA_HOST: mysql
+                UPLOAD_LIMIT: 400MB
+            networks:
+                - sail
     mysql:
         image: 'mysql:8.4'
         ports:

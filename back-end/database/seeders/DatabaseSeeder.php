@@ -17,9 +17,20 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
+        // Crear 9 usuaris normals (rol = 'usuari')
+        User::factory(9)->create();
+
+        // Crear 1 usuari admin
+        User::factory()->admin()->create();
+
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'rol' => 'usuari',
+            'password' => bcrypt('12345678'),
         ]);
+
+        // Portfolis
+        $this->call(PortfoliSeeder::class);
     }
 }
