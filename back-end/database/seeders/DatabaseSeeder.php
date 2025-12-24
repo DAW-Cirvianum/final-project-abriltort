@@ -31,6 +31,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Portfolis
-        $this->call(PortfoliSeeder::class);
+         $this->call([
+            PortfoliSeeder::class,
+            AlbumSeeder::class,
+            CategoriaSeeder::class,
+            TagSeeder::class,
+            ObraSeeder::class,
+             VisualitzacioSeeder::class,
+        ]);
     }
 }

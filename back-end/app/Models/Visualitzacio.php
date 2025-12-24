@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Visualitzacio extends Model
 {
+    protected $table = 'visualitzacions';
+    
     use HasFactory;
 
     protected $fillable = [
