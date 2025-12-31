@@ -15,10 +15,12 @@ class ObraSeeder extends Seeder
      */
     public function run(): void
     {
-          // Assignar a un album de 3 a 6 obres
-        Album::all()->each(function ($album) {
+        $categoriaIds = \App\Models\Categoria::pluck('id')->toArray();
+
+        Album::all()->each(function ($album) use ($categoriaIds) {
             Obra::factory(rand(3, 6))->create([
                 'album_id' => $album->id,
+                'categoria_id' => fake()->randomElement($categoriaIds),
             ])->each(function ($obra) {
                 // Assignar a una obra de 2 a 4 tags aleatoris
                 $tags = Tag::inRandomOrder()->take(rand(2, 4))->pluck('id');
