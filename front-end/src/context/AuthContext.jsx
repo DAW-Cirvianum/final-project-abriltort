@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -34,6 +35,32 @@ const login = async (email, password) => {
   }
 };
 
+const register = async (formData) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:8085/api/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setUser(res.data.user);
+      setToken(res.data.token);
+      localStorage.setItem("token", res.data.token);
+
+      return { success: true };
+    } catch (err) {
+      let message = "Error desconegut";
+      if (err.response) {
+        message = JSON.stringify(err.response.data);
+      }
+      return { success: false, message };
+    }
+  };
+
   // Funció de logout
   const logout = () => {
     setUser(null);
@@ -46,16 +73,14 @@ const login = async (email, password) => {
     const savedToken = localStorage.getItem("token");
     if (savedToken) {
       setToken(savedToken);
-
-      // Opcional: podries fer una crida al backend per validar el token i obtenir l'usuari
-      // axios.get("/api/user", { headers: { Authorization: `Bearer ${savedToken}` } })
-      //   .then(res => setUser(res.data))
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+export const useAuth = () => useContext(AuthContext);

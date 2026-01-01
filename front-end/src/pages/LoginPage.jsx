@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const { login } = useContext(AuthContext); // agafem la funció login del context
@@ -7,6 +8,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submit clicked", email, password);
@@ -19,6 +22,7 @@ const LoginPage = () => {
     } else {
       setError("");
       alert("Login correcte!");
+      navigate("/dashboard"); // redirigeix automàticament
     }
   };
 

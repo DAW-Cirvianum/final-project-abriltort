@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'rol',
+        'imatge'
     ];
 
     /**
@@ -46,5 +47,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return asset('storage/' . ($this->avatar ?? 'avatars/default.png'));
     }
 }

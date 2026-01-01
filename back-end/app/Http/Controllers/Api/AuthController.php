@@ -36,14 +36,22 @@ class AuthController extends Controller
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|min:8|confirmed', // password_confirmation
+        'password' => 'required|string|min:8|confirmed',
+        'imatge' => 'nullable|image|max:2048',
     ]);
+
+    if ($request->hasFile('imatge')) {
+        $avatarPath = $request->file('imatge')->store('avatars', 'public');
+    } else {
+        $avatarPath = 'avatars/default.png';
+    }
 
     $user = User::create([
         'name' => $request->name,
         'email' => $request->email,
         'password' => bcrypt($request->password),
-        'role' => 'user', // sempre user pel registre públic
+        'role' => 'user',
+        'imatge' => $avatarPath,
     ]);
 
     $token = $user->createToken('api-token')->plainTextToken;
