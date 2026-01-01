@@ -19,7 +19,7 @@ Route::post('/register', [AuthController::class, 'register']);
 // Rutes protegides amb Sanctum
 Route::middleware('auth:sanctum')->group(function () {
 
-    // Usuari autenticat (per veure / editar el seu perfil)
+    // Usuari autenticat
     Route::get('/user/profile', [UserController::class, 'showSelf']);
     Route::put('/user/profile', [UserController::class, 'updateSelf']);
 
@@ -36,6 +36,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('categories', CategoriaController::class);
     Route::apiResource('tags', TagController::class);
 
-    // Visualitzacions (registren tant si hi ha usuari com no)
+    // Visualitzacions
     Route::post('/visualitzacions', [VisualitzacioController::class, 'store']);
 });

@@ -100,7 +100,7 @@ class UserController extends Controller
     // Mostrar perfil propi
     public function showSelf()
     {
-        $user = Auth::guard('sanctum')->user(); // Usant guard de Sanctum
+        $user = Auth::guard('sanctum')->user();
         return response()->json([
             'success' => true,
             'data' => $user
