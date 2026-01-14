@@ -6,10 +6,33 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Categoria;
 
+/**
+ * @OA\Tag(
+ *     name="Categoria",
+ *     description="Gestió de categories"
+ * )
+ */
 class CategoriaController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Get(
+     *     path="/api/categories",
+     *     summary="Obtenir totes les categories",
+     *     tags={"Categoria"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Llista de categories",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/Categoria")
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
@@ -22,11 +45,32 @@ class CategoriaController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/api/categories",
+     *     summary="Crear una nova categoria",
+     *     tags={"Categoria"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="nom", type="string"),
+     *             @OA\Property(property="descripcio", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Categoria creada",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Categoria")
+     *         )
+     *     )
+     * )
      */
     public function store(Request $request)
     {
-         $request->validate([
+        $request->validate([
             'nom' => 'required|string|max:255',
             'descripcio' => 'nullable|string',
         ]);
@@ -43,11 +87,31 @@ class CategoriaController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/api/categories/{category}",
+     *     summary="Mostrar una categoria específica",
+     *     tags={"Categoria"},
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="path",
+     *         description="ID de la categoria",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Dades de la categoria",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Categoria")
+     *         )
+     *     )
+     * )
      */
     public function show(Categoria $category)
     {
-         // carregar les obres relacionades
+        // carregar les obres relacionades
         $category->load('obres');
 
         return response()->json([
@@ -57,7 +121,35 @@ class CategoriaController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Put(
+     *     path="/api/categories/{category}",
+     *     summary="Actualitzar una categoria",
+     *     tags={"Categoria"},
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="path",
+     *         description="ID de la categoria",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="nom", type="string"),
+     *             @OA\Property(property="descripcio", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Categoria actualitzada",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="data", ref="#/components/schemas/Categoria")
+     *         )
+     *     )
+     * )
      */
     public function update(Request $request, Categoria $category)
     {
@@ -75,13 +167,32 @@ class CategoriaController extends Controller
             'data' => $category
         ]);
     }
-
     /**
-     * Remove the specified resource from storage.
+     * @OA\Delete(
+     *     path="/api/categories/{category}",
+     *     summary="Eliminar una categoria",
+     *     tags={"Categoria"},
+     *     @OA\Parameter(
+     *         name="category",
+     *         in="path",
+     *         description="ID de la categoria",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Categoria eliminada",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean"),
+     *             @OA\Property(property="message", type="string", example="Categoria eliminada")
+     *         )
+     *     )
+     * )
      */
     public function destroy(Categoria $category)
     {
-         $category->delete();
+        $category->delete();
 
         return response()->json([
             'success' => true,
