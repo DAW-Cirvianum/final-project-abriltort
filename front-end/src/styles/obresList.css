@@ -1,0 +1,50 @@
+.obres-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.obra-card {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background-color: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.obra-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.obra-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.obra-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+}
+
+.edit-obra-btn {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.edit-obra-btn:hover {
+  background-color: #3730a3;
+}
+
+.obra-form-container {
+  margin-top: 1rem;
+}

@@ -1,0 +1,55 @@
+.albums-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.album-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background-color: #fff;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.album-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* header unificat */
+.album-header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  padding: 0.8rem 1.2rem;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.album-card.expanded .album-header {
+  background-color: #f0f0f0;
+}
+
+/* boto editar */
+.edit-album-btn {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.edit-album-btn:hover {
+  background-color: #3730a3;
+}
+
+.album-content {
+  padding: 1rem;
+  border-top: 1px solid #ddd;
+}

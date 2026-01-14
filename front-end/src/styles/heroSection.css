@@ -1,0 +1,26 @@
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 60px 20px;
+}
+
+.hero-left h1 {
+  font-size: 3rem;
+}
+
+.hero-right img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+  .hero-right {
+    margin-top: 20px;
+  }
+}

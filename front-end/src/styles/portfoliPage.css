@@ -1,0 +1,26 @@
+.portfoli-wrapper {
+  max-width: 1200px;
+  margin: 4rem auto 2rem auto; 
+}
+
+.portfoli-content {
+  display: flex;
+  gap: 2rem;
+}
+
+.albums-list {
+  flex: auto;
+}
+
+.obres-list {
+  flex: 1;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}

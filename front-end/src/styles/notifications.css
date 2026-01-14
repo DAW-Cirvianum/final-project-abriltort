@@ -1,0 +1,35 @@
+.notification {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  animation: fadeSlide 0.3s ease;
+}
+
+.notification-success {
+  background-color: #16a34a;
+}
+
+.notification-error {
+  background-color: #dc2626;
+}
+
+.notification-info {
+  background-color: #2563eb;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

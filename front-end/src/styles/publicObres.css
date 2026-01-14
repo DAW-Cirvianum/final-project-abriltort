@@ -1,0 +1,84 @@
+/* Contenidor dels selects */
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; 
+  justify-content: center;
+  margin-bottom: 2rem; 
+}
+
+/* Grid general */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Cartes d'obres */
+.border {
+  border: 1px solid #e2e8f0; 
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.border:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* Imatge de la obra */
+.border img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.border:hover img {
+  transform: scale(1.05);
+}
+
+/* Contingut de la carta */
+.border .p-3 {
+  padding: 0.75rem;
+}
+
+.border h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Categoria */
+.border p {
+  font-size: 0.85rem;
+  color: #718096; 
+}
+
+/* Tags */
+.border .flex span {
+  font-size: 0.7rem;
+  background-color: #ebf8ff;
+  color: #3182ce;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  margin-top: 0.25rem;
+}
+
+/* Selectors de filtre */
+select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 0.5rem;
+  transition: border 0.2s;
+}
+
+select:hover {
+  border-color: #3182ce;
+}

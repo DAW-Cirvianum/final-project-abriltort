@@ -1,0 +1,82 @@
+/* editarPerfil.css */
+
+.editar-perfil-page {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+.editar-perfil-page h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.editar-perfil-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.editar-perfil-form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.editar-perfil-form input {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.editar-perfil-form input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+}
+
+.editar-perfil-form button {
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.editar-perfil-form button:hover {
+  background-color: #0056b3;
+}
+
+.editar-perfil-error {
+  color: #d9534f;
+  font-weight: 500;
+  text-align: center;
+}
+
+.editar-perfil-success {
+  color: #28a745;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 650px) {
+  .editar-perfil-page {
+    margin: 20px;
+    padding: 20px;
+  }
+  .editar-perfil-form input,
+  .editar-perfil-form button {
+    font-size: 14px;
+    padding: 8px;
+  }
+}

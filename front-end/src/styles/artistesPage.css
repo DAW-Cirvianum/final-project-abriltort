@@ -1,0 +1,74 @@
+/* Contenidor principal */
+.artistes-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0; 
+}
+
+/* Missatges d'error */
+.error {
+  color: red;
+}
+
+/* Grid d'artistes */
+.artistes-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 1.5rem;
+}
+
+/* Targeta de cada artista */
+.artista-card {
+  cursor: pointer;
+  text-align: center;
+  padding: 1rem; 
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.artista-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Imatge de l'artista */
+.artista-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 0; 
+}
+
+/* Títols i rol */
+.artista-card h3 {
+  margin: 0.5rem 0 0.25rem;
+}
+
+.artista-card p {
+  margin: 0;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .artistes-grid {
+    grid-template-columns: repeat(2, 1fr); 
+  }
+}
+
+@media (max-width: 600px) {
+  .artistes-container {
+    padding: 0 0.5rem;
+  }
+
+  .artista-card {
+    padding: 1rem;
+  }
+
+  .artistes-grid {
+    grid-template-columns: 1fr; 
+  }
+}

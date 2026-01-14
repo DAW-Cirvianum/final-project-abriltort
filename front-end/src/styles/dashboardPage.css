@@ -1,0 +1,38 @@
+.dashboard-wrapper {
+  max-width: 1200px;
+  margin: 4rem auto 2rem auto; 
+  padding: 0 1rem; 
+}
+
+/* Error de càrrega del dashboard */
+.dashboard-error {
+  color: red;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* Secció quan no hi ha cap portfoli creat */
+.dashboard-empty {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 2rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* Botó per crear el primer portfoli */
+.dashboard-empty button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #4f46e5;
+  color: white;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background 0.2s;
+}
+
+.dashboard-empty button:hover {
+  background-color: #3730a3; 
+}
