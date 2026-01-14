@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+use App\Notifications\ResetPasswordNotification;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -52,5 +54,20 @@ class User extends Authenticatable
     public function getAvatarUrlAttribute()
     {
         return asset('storage/' . ($this->avatar ?? 'avatars/default.png'));
+    }
+
+    public function portfoli()
+    {
+        return $this->hasOne(Portfoli::class, 'usuari_id');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function getRoleAttribute()
+    {
+        return $this->rol;
     }
 }

@@ -19,7 +19,7 @@ class Album extends Model
     // Relació N a 1 amb Portfoli
     public function portfoli()
     {
-        return $this->belongsTo(Portfoli::class);
+        return $this->belongsTo(Portfoli::class, 'portfoli_id');
     }
 
     // Relació 1 a N amb Obres
