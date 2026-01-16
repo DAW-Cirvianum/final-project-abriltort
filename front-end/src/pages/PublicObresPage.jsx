@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next"; 
 import ObresFilters from "../components/ObresFilters";
 import ObresGrid from "../components/ObresGrid";
 import '../styles/publicObres.css';
 
+/**
+ * Pàgina pública per mostrar totes les obres amb filtres per categories i tags.
+ *
+ * @returns {JSX.Element} Component de pàgina pública d'obres
+ */
 const PublicObresPage = () => {
+  const { t } = useTranslation();
+
+  // Estat de les obres i filtres
   const [obres, setObres] = useState([]);
   const [categories, setCategories] = useState([]);
   const [tags, setTags] = useState([]);
@@ -12,7 +21,10 @@ const PublicObresPage = () => {
   const [selectedTag, setSelectedTag] = useState("");
   const [loading, setLoading] = useState(true);
 
- useEffect(() => {
+  /**
+   * Carrega categories i tags disponibles
+   */
+  useEffect(() => {
     axios.get("http://localhost:8085/api/categories")
       .then(res => setCategories(res.data.data || []))
       .catch(() => setCategories([]));
@@ -22,6 +34,9 @@ const PublicObresPage = () => {
       .catch(() => setTags([]));
   }, []);
 
+  /**
+   * Carrega obres públiques segons els filtres seleccionats
+   */
   useEffect(() => {
     setLoading(true);
     const params = {};
@@ -36,8 +51,10 @@ const PublicObresPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Obres</h1>
+      {/* Títol de la pàgina */}
+      <h1 className="text-3xl font-bold mb-6 text-center">{t("publicObres.title")}</h1>
 
+      {/* Filtres reutilitzables */}
       <ObresFilters
         categories={categories}
         tags={tags}
@@ -47,7 +64,10 @@ const PublicObresPage = () => {
         onTagChange={setSelectedTag}
       />
 
-      {loading ? <p className="text-center">Carregant obres...</p> : <ObresGrid obres={obres} />}
+      {/* Llista d'obres o missatge de loading */}
+      {loading 
+        ? <p className="text-center">{t("publicObres.loading")}</p> 
+        : <ObresGrid obres={obres} />}
     </div>
   );
 };

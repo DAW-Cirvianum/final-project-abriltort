@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import "../styles/home.css";
 
+/**
+ * Secció de la pàgina d'inici amb les últimes obres
+ *
+ * @returns {JSX.Element}
+ */
 const ObresSection = () => {
   const [obres, setObres] = useState([]);
-  const navigate = useNavigate(); // <-- per la navegació
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
+  // Carrega les últimes obres al muntar el component
   useEffect(() => {
     axios
       .get("http://localhost:8085/api/obres/public?limit=4")
       .then((res) => {
-        console.log(res.data.data);
+        console.log(res.data.data); 
         setObres(res.data.data);
       })
       .catch((err) => {
@@ -20,6 +28,11 @@ const ObresSection = () => {
       });
   }, []);
 
+  /**
+   * Retorna la URL correcta de la imatge d'una obra
+   * @param {Object} obra 
+   * @returns {string}
+   */
   const getObraImage = (obra) => {
     if (!obra?.fitxer_url) return "/no-image.png";
     if (obra.fitxer_url.startsWith("http")) return obra.fitxer_url;
@@ -30,18 +43,16 @@ const ObresSection = () => {
 
   return (
     <section className="obres-section">
-      <h2>Obres</h2>
-      <p className="subtitle">
-        Explora les galàxies úniques i les constel·lacions de cada artista
-      </p>
+      <h2>{t("obresSection.title")}</h2>
+      <p className="subtitle">{t("obresSection.subtitle")}</p>
 
+      {/* Graella amb les últimes obres */}
       <div className="obres-grid">
         {obres.map((obra) => (
           <article
             key={obra.id}
             className="obra-card"
-            //navega al clicar la imatge o card
-            onClick={() => navigate(`/obres/${obra.id}`)} 
+            onClick={() => navigate(`/obres/${obra.id}`)}
             style={{ cursor: "pointer" }}
           >
             <img src={getObraImage(obra)} alt={obra.titol} />
@@ -53,12 +64,12 @@ const ObresSection = () => {
         ))}
       </div>
 
+      {/* Botó per veure totes les obres */}
       <button
         className="veure-mes"
-        // navega a totes les obres
-        onClick={() => navigate("/obres")} 
+        onClick={() => navigate("/obres")}
       >
-        Veure totes
+        {t("obresSection.viewAll")}
       </button>
     </section>
   );

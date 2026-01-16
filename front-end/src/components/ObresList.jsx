@@ -2,23 +2,40 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useNotification } from "../context/NotificationContext";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import Modal from "./Modal";
 
+/**
+ * Llista d'obres amb opcions d'edició i eliminació per al propietari
+ * @param {Object} props
+ * @param {Array} props.obres Llista d'obres a mostrar
+ * @param {number} props.ownerId ID del propietari de les obres
+ * @param {function} props.onObraAction Callback quan una obra és modificada (o eliminada)
+ * @returns {JSX.Element}
+ */
 const ObresList = ({ obres, ownerId, onObraAction }) => {
   const navigate = useNavigate();
   const { user, token } = useAuth();
   const { showNotification } = useNotification();
+  const { t } = useTranslation();
   const loggedUserId = user?.id;
 
+  // Estat per al modal de confirmació d'eliminació
   const [deleteModal, setDeleteModal] = useState({
     isOpen: false,
     obraId: null,
   });
   const [loadingDelete, setLoadingDelete] = useState(false);
 
+  // Determina si l'usuari autenticat és el propietari
   const isOwner = loggedUserId === ownerId;
 
+  /**
+   * Retorna la URL correcta de la imatge d'una obra
+   * @param {Object} obra 
+   * @returns {string}
+   */
   const getObraImage = (obra) => {
     if (!obra?.fitxer_url) return "/no-image.png";
     if (obra.fitxer_url.startsWith("http")) return obra.fitxer_url;
@@ -27,10 +44,17 @@ const ObresList = ({ obres, ownerId, onObraAction }) => {
     return `http://localhost:8085/storage/${obra.fitxer_url}`;
   };
 
+  /**
+   * Obre el modal per confirmar eliminació
+   * @param {number} obraId 
+   */
   const confirmDeleteObra = (obraId) => {
     setDeleteModal({ isOpen: true, obraId });
   };
 
+  /**
+   * Elimina l'obra després de confirmar
+   */
   const handleConfirmDelete = async () => {
     const obraId = deleteModal.obraId;
     setDeleteModal({ isOpen: false, obraId: null });
@@ -40,12 +64,15 @@ const ObresList = ({ obres, ownerId, onObraAction }) => {
       await axios.delete(`http://localhost:8085/api/obres/${obraId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
+      // Notifica al component pare
       onObraAction?.({ type: "delete", id: obraId });
-      showNotification("Obra eliminada correctament!", "success");
+
+      showNotification(t("obres.deleteSuccess"), "success");
     } catch (err) {
       console.error(err);
       showNotification(
-        err.response?.data?.message || "No s'ha pogut eliminar l'obra.",
+        err.response?.data?.message || t("obres.deleteError"),
         "error"
       );
     } finally {
@@ -58,16 +85,20 @@ const ObresList = ({ obres, ownerId, onObraAction }) => {
       <div className="obres-grid">
         {obres.map((obra) => (
           <div key={obra.id} className="obra-card">
+            {/* Imatge clicable que navega a la vista de l'obra */}
             <img
               src={getObraImage(obra)}
               alt={obra.titol}
               loading="lazy"
               onClick={() => navigate(`/obres/${obra.id}`)}
             />
+
             <h4>{obra.titol}</h4>
 
+            {/* Accions només visibles pel propietari */}
             {isOwner && (
               <div className="obra-actions">
+                {/* Editar obra */}
                 <button
                   className="edit-obra-btn"
                   onClick={(e) => {
@@ -75,9 +106,10 @@ const ObresList = ({ obres, ownerId, onObraAction }) => {
                     navigate(`/dashboard/editar-obra/${obra.id}`);
                   }}
                 >
-                  Editar
+                  {t("common.edit")}
                 </button>
 
+                {/* Eliminar obra */}
                 <button
                   className="delete-obra-btn"
                   onClick={(e) => {
@@ -87,8 +119,8 @@ const ObresList = ({ obres, ownerId, onObraAction }) => {
                   disabled={loadingDelete && deleteModal.obraId === obra.id}
                 >
                   {loadingDelete && deleteModal.obraId === obra.id
-                    ? "Eliminant..."
-                    : "Eliminar"}
+                    ? t("common.deleting")
+                    : t("common.delete")}
                 </button>
               </div>
             )}
@@ -101,10 +133,10 @@ const ObresList = ({ obres, ownerId, onObraAction }) => {
         isOpen={deleteModal.isOpen}
         onClose={() => setDeleteModal({ isOpen: false, obraId: null })}
         onConfirm={handleConfirmDelete}
-        title="Confirmació d'eliminació"
-        message="Segur que vols eliminar aquesta obra?"
-        confirmText="Eliminar"
-        cancelText="Cancel·lar"
+        title={t("obres.confirmDeleteTitle")}
+        message={t("obres.confirmDeleteMessage")}
+        confirmText={t("common.delete")}
+        cancelText={t("common.cancel")}
       />
     </>
   );

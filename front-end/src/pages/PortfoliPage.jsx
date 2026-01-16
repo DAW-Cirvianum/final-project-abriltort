@@ -5,47 +5,66 @@ import PortfoliInfo from "../components/PortfoliInfo";
 import AlbumsList from "../components/AlbumsList";
 import ObresList from "../components/ObresList";
 import { useNotification } from "../context/NotificationContext";
+import { useTranslation } from "react-i18next";
 import "../styles/portfoliPage.css";
 
+/**
+ * Pàgina per mostrar un portfoli amb els seus àlbums i obres.
+ *
+ * @param {Object} props
+ * @param {Object} [props.portfoli] Portfoli pre-carregat opcional
+ * @returns {JSX.Element} Component complet del portfoli
+ */
 const PortfoliPage = ({ portfoli: propPortfoli }) => {
   const { artistId } = useParams();
   const { showNotification } = useNotification();
+  const { t } = useTranslation();
 
+  // Estat del portfoli
   const [portfoli, setPortfoli] = useState(
     propPortfoli || { albums: [], usuari_id: null, id: null }
   );
   const [loading, setLoading] = useState(!propPortfoli);
   const [error, setError] = useState(null);
 
+  // Àlbum seleccionat i obres per àlbum
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
   const [obresByAlbum, setObresByAlbum] = useState({});
   const [loadingObres, setLoadingObres] = useState(false);
 
-  // Carregar portfoli si no arriba per props
+  /**
+   * useEffect per carregar el portfoli des del backend
+   */
   useEffect(() => {
     if (propPortfoli) return;
+
     if (!artistId) {
-      setError("No s’ha proporcionat cap ID d’artista.");
+      setError(t("portfoli.noArtistId"));
       setLoading(false);
       return;
     }
+
     setLoading(true);
     axios
       .get(`http://localhost:8085/api/portfolis/${artistId}`)
       .then((res) => {
         const data = res.data?.data;
         if (!data || !data.id) {
-          setError("Aquest artista no té cap portfoli.");
+          setError(t("portfoli.noPortfolio"));
           setPortfoli({ albums: [], usuari_id: null, id: null });
         } else {
           setPortfoli(data);
         }
       })
-      .catch(() => setError("L'artista en questió no té portfoli."))
+      .catch(() => setError(t("portfoli.noPortfolio")))
       .finally(() => setLoading(false));
-  }, [artistId, propPortfoli]);
+  }, [artistId, propPortfoli, t]);
 
-  // Seleccionar àlbum i carregar obres si no existeixen
+  /**
+   * Selecciona un àlbum i carrega les seves obres, només si encara no s'han carregat
+   *
+   * @param {number} albumId ID de l'àlbum seleccionat
+   */
   const handleSelectAlbum = async (albumId) => {
     setSelectedAlbumId(albumId);
     if (!obresByAlbum[albumId]) {
@@ -60,14 +79,21 @@ const PortfoliPage = ({ portfoli: propPortfoli }) => {
         }));
       } catch (err) {
         setObresByAlbum((prev) => ({ ...prev, [albumId]: [] }));
-        showNotification("No s'han pogut carregar les obres.", "error");
+        showNotification(t("portfoli.loadObresError"), "error");
       } finally {
         setLoadingObres(false);
       }
     }
   };
 
-  // Gestiona eliminacions i actualitzacions d'obres
+  /**
+   * Gestiona accions sobre les obres
+   *
+   * @param {Object} action Objecte amb informació de l'acció
+   * @param {string} action.type Tipus d'acció: 'delete', 'update', 'edit'
+   * @param {number} [action.id] ID de l'obra a eliminar
+   * @param {Object} [action.obra] Obra actualitzada
+   */
   const handleObraAction = (action) => {
     if (!selectedAlbumId) return;
 
@@ -88,14 +114,16 @@ const PortfoliPage = ({ portfoli: propPortfoli }) => {
     }
   };
 
-  if (loading) return <p>Carregant portfoli...</p>;
+  if (loading) return <p>{t("portfoli.loading")}</p>;
   if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="portfoli-wrapper">
+      {/* Informació general del portfoli */}
       <PortfoliInfo portfoli={portfoli} />
 
       <div className="portfoli-content">
+        {/* Llista d'àlbums */}
         <AlbumsList
           albums={portfoli.albums}
           portfoli={portfoli}
@@ -104,7 +132,6 @@ const PortfoliPage = ({ portfoli: propPortfoli }) => {
               ...prev,
               albums: prev.albums.filter((a) => a.id !== albumId),
             }));
-            // Si eliminem l'àlbum seleccionat, netegem obres
             if (selectedAlbumId === albumId) {
               setSelectedAlbumId(null);
             }
@@ -112,10 +139,11 @@ const PortfoliPage = ({ portfoli: propPortfoli }) => {
           onSelectAlbum={handleSelectAlbum}
         />
 
+        {/* Llista d'obres de l'àlbum seleccionat */}
         {selectedAlbumId && (
           <div className="obres-list">
             {loadingObres ? (
-              <p>Carregant obres...</p>
+              <p>{t("portfoli.loadingObres")}</p>
             ) : (
               <ObresList
                 obres={obresByAlbum[selectedAlbumId] || []}

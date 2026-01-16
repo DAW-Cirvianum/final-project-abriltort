@@ -1,14 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"; 
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNotification } from "../context/NotificationContext";
 import "../styles/obraForm.css";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
+/**
+ * Formulari per crear o editar una obra
+ *
+ * @param {Object} props
+ * @param {Object} [props.initialData] Dades d’una obra existent per editar
+ * @param {Array} [props.albums] Llista d’àlbums disponibles
+ * @param {Array} [props.categories] Llista de categories disponibles
+ * @returns {JSX.Element}
+ */
 const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
   const { token } = useAuth();
   const { showNotification } = useNotification();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
+  // Camps del formulari
   const [titol, setTitol] = useState("");
   const [descripcio, setDescripcio] = useState("");
   const [albumId, setAlbumId] = useState("");
@@ -19,9 +32,8 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
 
-  /* tags*/
+  /* Carrega tots els tags disponibles */
   useEffect(() => {
     axios
       .get("http://localhost:8085/api/tags", {
@@ -29,11 +41,11 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
       })
       .then((res) => setAllTags(res.data.data || []))
       .catch(() =>
-        showNotification("Error carregant tags", "error")
+        showNotification(t("obraForm.errors.loadTags"), "error")
       );
-  }, [token, showNotification]);
+  }, [token, showNotification, t]);
 
-  /* edició */
+  /* Omple el formulari si és edició */
   useEffect(() => {
     if (initialData?.id) {
       setTitol(initialData.titol || "");
@@ -53,6 +65,10 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
     else if (errors.fitxer) document.getElementById("obra-fitxer")?.focus();
   }, [errors]);
 
+  /**
+   * Afegeix un tag al formulari si no hi és
+   * @param {number|string} tagId 
+   */
   const addTag = (tagId) => {
     const tag = allTags.find((t) => t.id === Number(tagId));
     if (tag && !tags.some((t) => t.id === tag.id)) {
@@ -60,22 +76,26 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
     }
   };
 
+  /**
+   * Elimina un tag del formulari
+   * @param {number|string} tagId 
+   */
   const removeTag = (tagId) => {
     setTags(tags.filter((t) => t.id !== tagId));
   };
 
-  /* submit */
+  /* Gestió de l’enviament del formulari */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
 
     const newErrors = {};
 
-    if (!titol.trim()) newErrors.titol = "El títol és obligatori.";
-    if (!albumId) newErrors.albumId = "Selecciona un àlbum.";
-    if (!categoriaId) newErrors.categoriaId = "Selecciona una categoria.";
-    if (!tags.length) newErrors.tags = "Afegeix almenys un tag.";
-    if (!fitxer && !initialData?.id) newErrors.fitxer = "El fitxer és obligatori.";
+    if (!titol.trim()) newErrors.titol = t("obraForm.errors.titleRequired");
+    if (!albumId) newErrors.albumId = t("obraForm.errors.albumRequired");
+    if (!categoriaId) newErrors.categoriaId = t("obraForm.errors.categoryRequired");
+    if (!tags.length) newErrors.tags = t("obraForm.errors.tagsRequired");
+    if (!fitxer && !initialData?.id) newErrors.fitxer = t("obraForm.errors.fileRequired");
 
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
@@ -108,12 +128,13 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
 
       showNotification(
         initialData?.id
-          ? "Obra actualitzada correctament!"
-          : "Obra creada correctament!",
+          ? t("obraForm.success.updated")
+          : t("obraForm.success.created"),
         "success"
       );
       navigate("/dashboard");
 
+      // Reset camps si és nova obra
       if (!initialData?.id) {
         setTitol("");
         setDescripcio("");
@@ -124,7 +145,7 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
       }
     } catch (err) {
       showNotification(
-        err.response?.data?.message || "No s'ha pogut guardar l'obra.",
+        err.response?.data?.message || t("obraForm.errors.saveFailed"),
         "error"
       );
     } finally {
@@ -132,12 +153,13 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
     }
   };
 
-  /* render */
+  /* Render del formulari */
   return (
     <form onSubmit={handleSubmit} className="form-container">
-      <h4>{initialData?.id ? "Editar Obra" : "Afegir Obra"}</h4>
+      <h4>{initialData?.id ? t("obraForm.editTitle") : t("obraForm.addTitle")}</h4>
 
-      <label htmlFor="obra-titol">Títol *</label>
+      {/* Títol */}
+      <label htmlFor="obra-titol">{t("obraForm.labels.title")} *</label>
       <input
         id="obra-titol"
         type="text"
@@ -149,14 +171,16 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
       />
       {errors.titol && <p id="obra-titol-error" className="error">{errors.titol}</p>}
 
-      <label htmlFor="obra-descripcio">Descripció</label>
+      {/* Descripció */}
+      <label htmlFor="obra-descripcio">{t("obraForm.labels.description")}</label>
       <textarea
         id="obra-descripcio"
         value={descripcio}
         onChange={(e) => setDescripcio(e.target.value)}
       />
 
-      <label htmlFor="obra-album">Àlbum *</label>
+      {/* Àlbum */}
+      <label htmlFor="obra-album">{t("obraForm.labels.album")} *</label>
       <select
         id="obra-album"
         value={albumId}
@@ -166,7 +190,7 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
         aria-describedby={errors.albumId ? "obra-album-error" : undefined}
       >
         <option value="">
-          {albums.length ? "-- Selecciona un àlbum --" : "No hi ha àlbums disponibles"}
+          {albums.length ? t("obraForm.placeholders.selectAlbum") : t("obraForm.placeholders.noAlbums")}
         </option>
         {albums.map((a) => (
           <option key={a.id} value={a.id}>{a.nom}</option>
@@ -174,7 +198,8 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
       </select>
       {errors.albumId && <p id="obra-album-error" className="error">{errors.albumId}</p>}
 
-      <label htmlFor="obra-categoria">Categoria *</label>
+      {/* Categoria */}
+      <label htmlFor="obra-categoria">{t("obraForm.labels.category")} *</label>
       <select
         id="obra-categoria"
         value={categoriaId}
@@ -184,7 +209,7 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
         aria-describedby={errors.categoriaId ? "obra-categoria-error" : undefined}
       >
         <option value="">
-          {categories.length ? "-- Selecciona una categoria --" : "No hi ha categories disponibles"}
+          {categories.length ? t("obraForm.placeholders.selectCategory") : t("obraForm.placeholders.noCategories")}
         </option>
         {categories.map((c) => (
           <option key={c.id} value={c.id}>{c.nom}</option>
@@ -192,7 +217,8 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
       </select>
       {errors.categoriaId && <p id="obra-categoria-error" className="error">{errors.categoriaId}</p>}
 
-      <label htmlFor="obra-tags">Tags *</label>
+      {/* Tags */}
+      <label htmlFor="obra-tags">{t("obraForm.labels.tags")} *</label>
       <div id="obra-tags" className="tags-container" aria-describedby={errors.tags ? "obra-tags-error" : undefined}>
         {tags.map((tag) => (
           <span key={tag.id} className="tag-pill" onClick={() => removeTag(tag.id)}>
@@ -201,16 +227,15 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
         ))}
       </div>
       <select onChange={(e) => addTag(e.target.value)}>
-        <option value="">-- Afegir tag --</option>
-        {allTags
-          .filter((t) => !tags.some((tag) => tag.id === t.id))
-          .map((t) => (
-            <option key={t.id} value={t.id}>{t.nom}</option>
-          ))}
+        <option value="">{t("obraForm.placeholders.addTag")}</option>
+        {allTags.filter((t) => !tags.some((tag) => tag.id === t.id)).map((t) => (
+          <option key={t.id} value={t.id}>{t.nom}</option>
+        ))}
       </select>
       {errors.tags && <p id="obra-tags-error" className="error">{errors.tags}</p>}
 
-      <label htmlFor="obra-fitxer">Fitxer *</label>
+      {/* Fitxer */}
+      <label htmlFor="obra-fitxer">{t("obraForm.labels.file")} *</label>
       <input
         id="obra-fitxer"
         type="file"
@@ -221,12 +246,13 @@ const ObraForm = ({ initialData = {}, albums = [], categories = [] }) => {
       />
       {errors.fitxer && <p id="obra-fitxer-error" className="error">{errors.fitxer}</p>}
 
+      {/* Botó submit */}
       <button disabled={loading}>
         {loading
-          ? "Guardant..."
+          ? t("obraForm.buttons.saving")
           : initialData?.id
-          ? "Actualitzar Obra"
-          : "Afegir Obra"}
+          ? t("obraForm.buttons.update")
+          : t("obraForm.buttons.add")}
       </button>
     </form>
   );

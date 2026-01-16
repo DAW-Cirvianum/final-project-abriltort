@@ -1,12 +1,38 @@
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 import "../styles/modal.css";
 
-const ModalConfirm = ({ isOpen, onClose, onConfirm, title, message, confirmText = "Confirmar", cancelText = "Cancelar" }) => {
+/**
+ * Modal de confirmació reutilitzable
+ * Mostra un missatge amb botons de confirmació i cancel·lació
+ *
+ * @param {Object} props
+ * @param {boolean} props.isOpen Controla si el modal està obert
+ * @param {Function} props.onClose Funció per tancar el modal
+ * @param {Function} props.onConfirm Funció a executar quan es confirma
+ * @param {string} props.title Títol del modal
+ * @param {string} props.message Missatge del modal
+ * @param {string} [props.confirmKey] Clau de traducció per al botó de confirmar
+ * @param {string} [props.cancelKey] Clau de traducció per al botó de cancel·lar
+ * @returns {JSX.Element|null}
+ */
+const ModalConfirm = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title,
+  message,
+  confirmKey = "common.confirm",
+  cancelKey = "common.cancel",
+}) => {
+  const { t } = useTranslation();
+
+  // Referència al modal per focus i accessibilitat
   const modalRef = useRef(null);
   const previouslyFocusedElement = useRef(null);
 
-  // Mou focus al modal i guarda l'element anterior
+  // Mou el focus al modal quan s’obre 
   useEffect(() => {
     if (isOpen) {
       previouslyFocusedElement.current = document.activeElement;
@@ -16,7 +42,7 @@ const ModalConfirm = ({ isOpen, onClose, onConfirm, title, message, confirmText 
     }
   }, [isOpen]);
 
-  // Escape per tancar
+  // Tanca el modal amb la tecla Escape
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape" && isOpen) onClose();
@@ -25,7 +51,7 @@ const ModalConfirm = ({ isOpen, onClose, onConfirm, title, message, confirmText 
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Focus trap
+  // Evita que el focus surti del modal mentre està obert
   useEffect(() => {
     const handleFocus = (e) => {
       if (isOpen && modalRef.current && !modalRef.current.contains(e.target)) {
@@ -39,13 +65,9 @@ const ModalConfirm = ({ isOpen, onClose, onConfirm, title, message, confirmText 
 
   if (!isOpen) return null;
 
+  // Renderitza el modal
   return createPortal(
-    <div
-      className="modal-backdrop"
-      role="presentation"
-      onClick={onClose}
-      
-    >
+    <div className="modal-backdrop" role="presentation" onClick={onClose}>
       <div
         ref={modalRef}
         className="modal-content confirm-modal"
@@ -57,11 +79,14 @@ const ModalConfirm = ({ isOpen, onClose, onConfirm, title, message, confirmText 
       >
         {title && <h2 id="modal-title">{title}</h2>}
         <div className="modal-body">
-          <p>{message}</p>
+          {message && <p>{message}</p>}
           <div className="modal-actions">
+            {/* Botó de cancel·lar */}
             <button className="modal-btn modal-btn-cancel" onClick={onClose}>
-              {cancelText}
+              {t(cancelKey)}
             </button>
+
+            {/* Botó de confirmar */}
             <button
               className="modal-btn modal-btn-confirm"
               onClick={() => {
@@ -69,7 +94,7 @@ const ModalConfirm = ({ isOpen, onClose, onConfirm, title, message, confirmText 
                 onClose();
               }}
             >
-              {confirmText}
+              {t(confirmKey)}
             </button>
           </div>
         </div>

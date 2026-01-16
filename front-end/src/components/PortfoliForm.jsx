@@ -3,9 +3,18 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useNotification } from "../context/NotificationContext";
+import { useTranslation } from "react-i18next";
 import "../styles/PortfoliForm.css";
 
+/**
+ * Formulari per crear o editar un portfoli
+ *
+ * @param {Object} props
+ * @param {function} props.onSuccess Callback quan el portfoli s'ha creat/actualitzat amb èxit
+ * @returns {JSX.Element}
+ */
 const PortfoliForm = ({ onSuccess }) => {
+  const { t } = useTranslation();
   const { user, token } = useAuth();
   const navigate = useNavigate();
   const { showNotification } = useNotification();
@@ -16,6 +25,7 @@ const PortfoliForm = ({ onSuccess }) => {
   const [errors, setErrors] = useState({});
   const [isEdit, setIsEdit] = useState(false);
 
+  // Carregar el portfoli de l'usuari si existeix
   useEffect(() => {
     const fetchPortfoli = async () => {
       if (!token) return;
@@ -38,12 +48,14 @@ const PortfoliForm = ({ onSuccess }) => {
     fetchPortfoli();
   }, [token, user]);
 
+  // Gestionar submit del formulari
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
 
+    // Validació simple
     if (!titol.trim()) {
-      setErrors({ titol: "El camp títol és obligatori." });
+      setErrors({ titol: t("portfolio.titleRequired") });
       return;
     }
 
@@ -62,14 +74,15 @@ const PortfoliForm = ({ onSuccess }) => {
 
       showNotification(
         isEdit
-          ? "Portfoli actualitzat correctament!"
-          : "Portfoli creat correctament!",
+          ? t("portfolio.updated")
+          : t("portfolio.created"),
         "success"
       );
 
       if (onSuccess) onSuccess(res.data.data);
       setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
+      // Errors per camp
       if (err.response?.status === 422 && err.response.data?.errors) {
         const fieldErrors = {};
         for (const field in err.response.data.errors) {
@@ -78,7 +91,7 @@ const PortfoliForm = ({ onSuccess }) => {
         setErrors(fieldErrors);
       } else {
         showNotification(
-          err.response?.data?.message || "Hi ha hagut un problema. Torna-ho a provar.",
+          err.response?.data?.message || t("portfolio.errorTryAgain"),
           "error"
         );
       }
@@ -89,8 +102,9 @@ const PortfoliForm = ({ onSuccess }) => {
 
   return (
     <form className="portfoli-form" onSubmit={handleSubmit} noValidate>
+      {/* Títol */}
       <div className="form-group">
-        <label htmlFor="portfoli-titol">Títol *</label>
+        <label htmlFor="portfoli-titol">{t("portfolio.title")} *</label>
         <input
           id="portfoli-titol"
           type="text"
@@ -107,8 +121,9 @@ const PortfoliForm = ({ onSuccess }) => {
         )}
       </div>
 
+      {/* Descripció */}
       <div className="form-group">
-        <label htmlFor="portfoli-descripcio">Descripció</label>
+        <label htmlFor="portfoli-descripcio">{t("portfolio.description")}</label>
         <textarea
           id="portfoli-descripcio"
           value={descripcio}
@@ -117,8 +132,9 @@ const PortfoliForm = ({ onSuccess }) => {
         />
       </div>
 
+      {/* Botó submit */}
       <button type="submit" disabled={loading}>
-        {loading ? "Guardant..." : isEdit ? "Actualitzar" : "Crear"}
+        {loading ? t("portfolio.saving") : isEdit ? t("portfolio.update") : t("portfolio.create")}
       </button>
     </form>
   );

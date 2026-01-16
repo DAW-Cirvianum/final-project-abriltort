@@ -10,31 +10,47 @@ import ObresList from "../components/ObresList";
 
 import "../styles/portfoliPage.css";
 import "../styles/dashboardPage.css";
+import { useTranslation } from "react-i18next";
 
+/**
+ * Pàgina que mostra el portfoli d'un artista
+ *
+ * @param {Object} props
+ * @param {Object} [props.portfoli] Portfoli pre-carregat
+ * @returns {JSX.Element} Component amb àlbums i obres d'un portfoli
+ */
 const PortfoliPage = ({ portfoli: propPortfoli }) => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const { artistId: paramArtistId } = useParams();
   const navigate = useNavigate();
 
   const artistId = paramArtistId || user?.id;
 
+  // Estat principal del portfoli
   const [portfoli, setPortfoli] = useState(
     propPortfoli || { albums: [], usuari_id: null }
   );
   const [loading, setLoading] = useState(!propPortfoli);
   const [error, setError] = useState(null);
 
+  // Estat per àlbums i obres
   const [selectedAlbumId, setSelectedAlbumId] = useState(null);
   const [obres, setObres] = useState([]);
   const [loadingObres, setLoadingObres] = useState(false);
 
+  // Determina si l'usuari actual és el propietari del portfoli
   const isOwner = user?.id === portfoli?.usuari_id;
 
+  /**
+   * useEffect per carregar el portfoli de l'artista
+   * si no es passa com a prop
+   */
   useEffect(() => {
     if (propPortfoli) return;
 
     if (!artistId) {
-      setError("No s’ha pogut determinar l’artista.");
+      setError(t("portfoliPage.noArtistId"));
       setLoading(false);
       return;
     }
@@ -45,23 +61,26 @@ const PortfoliPage = ({ portfoli: propPortfoli }) => {
       .then((res) => {
         const data = res.data?.data;
         if (!data || !data.usuari_id) {
-          // L’usuari loguejat és el propietari i no té portfoli
           if (artistId === user?.id) {
-            setError("Encara no tens cap portfoli creat. Crea el teu primer portfoli!");
-            setPortfoli(null); // per assegurar-nos que no mostrem altres components
+            setError(t("portfoliPage.noPortfolioOwner"));
+            setPortfoli(null);
           } else {
-            setError("Aquest usuari encara no té portfoli.");
+            setError(t("portfoliPage.noPortfolioUser"));
           }
         } else {
           setPortfoli(data);
         }
       })
       .catch(() => {
-        setError("No s’ha pogut carregar el portfoli.");
+        setError(t("portfoliPage.loadError"));
       })
       .finally(() => setLoading(false));
-  }, [artistId, propPortfoli, user?.id]);
+  }, [artistId, propPortfoli, user?.id, t]);
 
+  /**
+   * Selecciona un àlbum i carrega les seves obres
+   * @param {number} albumId ID de l'àlbum seleccionat
+   */
   const handleSelectAlbum = (albumId) => {
     setSelectedAlbumId(albumId);
     setLoadingObres(true);
@@ -73,43 +92,51 @@ const PortfoliPage = ({ portfoli: propPortfoli }) => {
       .finally(() => setLoadingObres(false));
   };
 
+  /**
+   * Actualitza una obra quan es modifica
+   * @param {Object} updatedObra Obra actualitzada
+   */
   const handleObraUpdated = (updatedObra) => {
     setObres((prev) =>
       prev.map((o) => (o.id === updatedObra.id ? updatedObra : o))
     );
   };
 
-  if (loading) return <p>Carregant portfoli...</p>;
+  // Mostra carregant mentre es carrega el portfoli
+  if (loading) return <p>{t("portfoliPage.loading")}</p>;
 
-  // ERROR o usuari sense portfoli
- if (error)
-  return (
-    <div className="dashboard-wrapper">
-      {artistId === user?.id ? (
-        <div className="dashboard-empty">
-          <h2> Hola {user?.name || "artista"}!</h2>
-          <p>
-            Encara no tens cap portfoli creat. És el moment perfecte per mostrar
-            el teu talent!
-          </p>
-          <button onClick={() => navigate(`/dashboard/crear-portfoli`)}>
-            Crear el teu primer portfoli
-          </button>
-        </div>
-      ) : (
-        <p className="dashboard-error">{error}</p>
-      )}
-    </div>
-  );
+  // Mostra errors segons si és el propietari o un altre usuari
+  if (error)
+    return (
+      <div className="dashboard-wrapper">
+        {artistId === user?.id ? (
+          <div className="dashboard-empty">
+            <h2>
+              {t("portfoliPage.hello", {
+                name: user?.name || t("portfoliPage.defaultName"),
+              })}
+            </h2>
+            <p>{t("portfoliPage.noPortfolioMessage")}</p>
+            <button onClick={() => navigate(`/dashboard/crear-portfoli`)}>
+              {t("portfoliPage.createFirstPortfolio")}
+            </button>
+          </div>
+        ) : (
+          <p className="dashboard-error">{error}</p>
+        )}
+      </div>
+    );
 
   return (
     <div className="portfoli-wrapper">
+      {/* Accions del propietari del portfoli */}
       {isOwner && <PortfoliActions portfoli={portfoli} />}
 
-      {/* Info del portfoli */}
+      {/* Informació general del portfoli */}
       <PortfoliInfo portfoli={portfoli} />
 
       <div className="portfoli-content">
+        {/* Llista d'àlbums */}
         <div className={selectedAlbumId ? "albums-list flex-1" : "albums-list"}>
           <AlbumsList
             albums={portfoli.albums || []}
@@ -129,10 +156,11 @@ const PortfoliPage = ({ portfoli: propPortfoli }) => {
           />
         </div>
 
+        {/* Llista d'obres de l'àlbum seleccionat */}
         {selectedAlbumId && (
           <div className="obres-list flex-1">
             {loadingObres ? (
-              <p>Carregant obres...</p>
+              <p>{t("portfoliPage.loadingObres")}</p>
             ) : (
               <ObresList
                 obres={obres}

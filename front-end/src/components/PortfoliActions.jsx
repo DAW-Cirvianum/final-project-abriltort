@@ -1,7 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
+/**
+ * Botons d'acció per a un portfolii: crear àlbum, crear obra, editar portfoli
+ * @param {Object} props
+ * @param {Object} props.portfoli Portfoli de l'usuari
+ * @returns {JSX.Element}
+ */
 const PortfoliActions = ({ portfoli }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const hasAlbums = portfoli.albums && portfoli.albums.length > 0;
 
@@ -19,7 +27,7 @@ const PortfoliActions = ({ portfoli }) => {
         onClick={() => navigate("/dashboard/crear-album")}
         style={buttonStyle}
       >
-        Crear àlbum
+        {t("portfolio.createAlbum")}
       </button>
 
       {/* Crear obra (només si hi ha àlbums) */}
@@ -31,9 +39,9 @@ const PortfoliActions = ({ portfoli }) => {
           backgroundColor: hasAlbums ? "#4f46e5" : "#aaa",
           cursor: hasAlbums ? "pointer" : "not-allowed",
         }}
-        title={!hasAlbums ? "Crea primer un àlbum" : ""}
+        title={!hasAlbums ? t("portfolio.createAlbumFirst") : ""}
       >
-        Crear obra
+        {t("portfolio.createObra")}
       </button>
 
       {/* Editar portfoli */}
@@ -46,12 +54,13 @@ const PortfoliActions = ({ portfoli }) => {
           backgroundColor: "#16a34a",
         }}
       >
-        Editar portfoli
+        {t("portfolio.editPortfolio")}
       </button>
     </div>
   );
 };
 
+/** Estil base per tots els botons del PortfoliActions */
 const buttonStyle = {
   padding: "0.6rem 1.2rem",
   borderRadius: "8px",

@@ -1,18 +1,27 @@
 import { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 
-// Creem el context
+/**
+ * Context d'autenticació
+ * Proporciona usuari, token i funcions per login, registre i logout
+ */
 export const AuthContext = createContext();
 
+/**
+ * Proveïdor d'autenticació
+ *
+ * @param {Object} props
+ * @param {JSX.Element} props.children Components fills que utilitzaran el context
+ */
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);      
-  const [token, setToken] = useState(null);    
+  const [user, setUser] = useState(null);      // Usuari loguejat
+  const [token, setToken] = useState(null);    // Token JWT
   const [loading, setLoading] = useState(true); 
 
   const TOKEN_KEY = "auth_token";
   const USER_KEY = "auth_user";
 
-  // Configuració global axios
+  // Configuració global de headers per axios
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -21,7 +30,13 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Login (email o nom d'usuari)
+  /**
+   * Login amb email o nom d'usuari
+   *
+   * @param {string} loginInput Email o nom d'usuari
+   * @param {string} password Contrasenya
+   * @returns {Promise<{success: boolean, message?: string}>} Resultat del login
+   */
   const login = async (loginInput, password) => {
     try {
       const res = await axios.post("http://localhost:8085/api/login", { 
@@ -46,7 +61,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register
+  /**
+   * Registre d'un nou usuari
+   *
+   * @param {FormData} formData Dades del formulari de registre
+   * @returns {Promise<{success: boolean, message?: string}>} Resultat del registre
+   */
   const register = async (formData) => {
     try {
       const res = await axios.post(
@@ -68,7 +88,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout
+  /**
+   * Logout de l'usuari
+   * Neteja estat i localStorage
+   */
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -76,7 +99,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem(USER_KEY);
   };
 
-  // Carreguem token i usuari al iniciar l'app
+  // Carrega token i usuari desat a localStorage al iniciar l'app
   useEffect(() => {
     const savedToken = localStorage.getItem(TOKEN_KEY);
     const savedUser = localStorage.getItem(USER_KEY);
@@ -96,4 +119,9 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+/**
+ * Hook personalitzat per utilitzar el context d'autenticació
+ *
+ * @returns {Object} { user, setUser, token, login, register, logout, loading }
+ */
 export const useAuth = () => useContext(AuthContext);

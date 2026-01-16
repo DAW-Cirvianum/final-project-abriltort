@@ -3,9 +3,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../components/Paginacio";
 import { useAuth } from "../context/AuthContext"; 
+import { useTranslation } from "react-i18next";
 
+/**
+ * Pàgina d'artistes
+ * 
+ * Mostra una llista paginada d'artistes públics excloent l'usuari loguejat
+ */
 const ArtistesPage = () => {
-  // obtenim l'usuari loguejat
+  const { t } = useTranslation();
   const { user } = useAuth(); 
   const [artistes, setArtistes] = useState([]);
   const [page, setPage] = useState(1);
@@ -16,6 +22,9 @@ const ArtistesPage = () => {
   const limit = 4;
   const navigate = useNavigate();
 
+  /**
+   * Obté artistes des de l'API cada cop que canvia la pàgina o l'usuari
+   */
   useEffect(() => {
     const fetchArtistes = async () => {
       setLoading(true);
@@ -36,17 +45,26 @@ const ArtistesPage = () => {
         setHasMore(meta.current_page < meta.last_page);
       } catch (err) {
         console.error(err);
-        setError("No s'han pogut carregar els artistes.");
+        setError(t("artistesPage.loadError"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchArtistes();
-  }, [page, user]);
+  }, [page, user, t]);
 
+  /**
+   * Navega al portfoli de l'artista
+   * @param {number} id ID de l'artista
+   */
   const handleClick = (id) => navigate(`/portfoli/${id}`);
 
+  /**
+   * Obté la imatge correcta de l'artista
+   * @param {Object} artista Objecte artista
+   * @returns {string} URL de la imatge
+   */
   const getArtistaImage = (artista) => {
     if (!artista?.imatge) return "/default-avatar.png";
     if (artista.imatge.startsWith("http")) return artista.imatge;
@@ -56,15 +74,19 @@ const ArtistesPage = () => {
 
   return (
     <div style={{ maxWidth: "1200px", margin: "2rem auto" }}>
-      <h1>Artistes</h1>
+      <h1>{t("artistesPage.title")}</h1>
 
-      {loading && <p>Carregant artistes...</p>}
+      {/* Estat de càrrega */}
+      {loading && <p>{t("artistesPage.loading")}</p>}
+
+      {/* Error en la càrrega */}
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {!loading && !error && (
         <>
+          {/* Cap artistes trobats */}
           {artistes.length === 0 ? (
-            <p>No hi ha artistes disponibles.</p>
+            <p>{t("artistesPage.noArtistes")}</p>
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}>
               {artistes.map((artista) => (
@@ -75,17 +97,18 @@ const ArtistesPage = () => {
                 >
                   <img
                     src={getArtistaImage(artista)}
-                    alt={artista.nom || artista.name || "Artista"}
+                    alt={artista.nom || artista.name || t("artistesPage.defaultName")}
                     style={{ width: "100%", aspectRatio: "1/1", objectFit: "cover", borderRadius: "50%" }}
                     loading="lazy"
                   />
-                  <h3>{artista.nom || artista.name}</h3>
+                  <h3>{artista.nom || artista.name || t("artistesPage.defaultName")}</h3>
                   <p>{artista.rol}</p>
                 </div>
               ))}
             </div>
           )}
 
+          {/* Paginació */}
           <Pagination
             page={page}
             onPrev={() => setPage((prev) => Math.max(prev - 1, 1))}

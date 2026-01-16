@@ -21,8 +21,13 @@ import EditAlbumPage from "../pages/EditAlbumPage";
 import EditarObraPage from "../pages/EditarObraPage";
 import PublicObresPage from "../pages/PublicObresPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
-import ResetPasswordPage from "../pages/ResetPAswordPage";
+import ResetPasswordPage from "../pages/ResetPaswordPage";
+import { useTranslation } from "react-i18next";
 
+/**
+ * Component fallback per a rutes no trobades
+ * @returns {JSX.Element} Missatge 404
+ */
 const NotFound = () => (
   <div style={{ textAlign: "center", marginTop: "50px" }}>
     <h1>404</h1>
@@ -30,12 +35,20 @@ const NotFound = () => (
   </div>
 );
 
+/**
+ * Router principal de l'aplicació
+ * Defineix les rutes públiques, rutes protegides i rutes amb layout de dashboard també encapsula components amb ErrorBoundary per capturar errors visuals.
+ *
+ * @returns {JSX.Element} El component de navegació complet de l'app
+ */
 const AppRouter = () => {
   return (
     <Router>
+      {/* Navbar visible a totes les pàgines */}
       <Navbar />
+
       <Routes>
-        {/* Rutes públiques */}
+        {/* Rutes públiques amb ErrorBoundary */}
         <Route
           path="/"
           element={
@@ -126,6 +139,7 @@ const AppRouter = () => {
             </ProtectedRoute>
           }
         >
+          {/* Ruta principal del dashboard */}
           <Route
             index
             element={
@@ -135,6 +149,7 @@ const AppRouter = () => {
             }
           />
 
+          {/* Rutes de creació dins del dashboard */}
           <Route
             path="crear-portfoli"
             element={
@@ -143,7 +158,6 @@ const AppRouter = () => {
               </ErrorBoundary>
             }
           />
-
           <Route
             path="crear-album"
             element={
@@ -152,7 +166,6 @@ const AppRouter = () => {
               </ErrorBoundary>
             }
           />
-
           <Route
             path="crear-obra"
             element={
@@ -162,6 +175,7 @@ const AppRouter = () => {
             }
           />
 
+          {/* Rutes d'edició dins del dashboard */}
           <Route
             path="editar-obra/:id"
             element={
@@ -170,7 +184,6 @@ const AppRouter = () => {
               </ErrorBoundary>
             }
           />
-
           <Route
             path="editar-perfil"
             element={
@@ -179,7 +192,6 @@ const AppRouter = () => {
               </ErrorBoundary>
             }
           />
-
           <Route
             path="editar-portfoli/:portfoliId"
             element={
@@ -188,7 +200,6 @@ const AppRouter = () => {
               </ErrorBoundary>
             }
           />
-
           <Route
             path="albums/:albumId/edit"
             element={
@@ -199,9 +210,11 @@ const AppRouter = () => {
           />
         </Route>
 
-        {/* Ruta fallback */}
+        {/* Ruta fallback 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      {/* Footer visible a totes les pàgines */}
       <Footer />
     </Router>
   );

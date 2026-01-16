@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // <-- importem useNavigate
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 import "../styles/ArtistesSection.css"; 
 
+/**
+ * Secció que mostra una selecció d’artistes destacats
+ *
+ * @returns {JSX.Element}
+ */
 const ArtistesSection = () => {
+  // Llista d’artistes a mostrar
   const [artistes, setArtistes] = useState([]);
-  const navigate = useNavigate(); // <-- creem el navigate
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
+  // Carrega els últims artistes en muntar el component
   useEffect(() => {
     axios
       .get("http://localhost:8085/api/artistes/public?limit=4")
       .then((res) => {
-        console.log(res.data); 
         setArtistes(res.data);
       })
       .catch((err) => {
@@ -20,7 +28,11 @@ const ArtistesSection = () => {
       });
   }, []);
 
-  // Funció per obtenir la imatge correcta de l'artista
+  /**
+   * Retorna la URL correcta de la imatge de l’artista, gestiona imatges 
+   * @param {Object} artista Objecte artista
+   * @returns {string} URL de la imatge
+   */
   const getArtistaImage = (artista) => {
     if (!artista?.imatge) return "/default-avatar.png";
     if (artista.imatge.startsWith("http")) return artista.imatge;
@@ -31,23 +43,20 @@ const ArtistesSection = () => {
   return (
     <section className="artistes-section">
       <div className="container">
-        {/* Columna esquerra: valor de la proposta */}
+        {/* Columna esquerra */}
         <div className="left-col">
-          <h2>Explora els nostres artistes</h2>
-          <p>
-            Descobreix els últims talents que s’han unit a la nostra comunitat.
-            Cada artista aporta la seva visió única i creativitat.
-          </p>
+          <h2>{t("artistes.title")}</h2>
+          <p>{t("artistes.description")}</p>
         </div>
 
-        {/* Columna dreta: últims artistes */}
+        {/* Columna dreta*/}
         <div className="right-col">
           {artistes.map((artista) => (
             <div
               key={artista.id}
               className="artista-card"
-              onClick={() => navigate(`/portfoli/${artista.id}`)} 
-              style={{ cursor: "pointer" }} 
+              onClick={() => navigate(`/portfoli/${artista.id}`)}
+              style={{ cursor: "pointer" }}
             >
               <img
                 src={getArtistaImage(artista)}

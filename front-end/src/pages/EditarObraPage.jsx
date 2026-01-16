@@ -3,22 +3,35 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useParams } from "react-router-dom";
 import ObraForm from "../components/ObraForm";
+import { useTranslation } from "react-i18next";
 
+/**
+ * Pàgina per editar una obra existent
+ *
+ * @returns {JSX.Element} Formulari per editar obra amb àlbums i categories disponibles
+ */
 const EditarObraPage = () => {
+  const { t } = useTranslation();
   const { token } = useAuth();
-  const { id } = useParams(); // ID de l'obra a editar
+  const { id } = useParams();
+
+  // Estat per guardar albums, categories, obra i estats de càrrega/errors
   const [albums, setAlbums] = useState([]);
   const [categories, setCategories] = useState([]);
   const [obraData, setObraData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  /**
+   * useEffect per carregar dades necessàries abans de mostrar el formulari
+   */
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+
       try {
-        // Crida concurrent: albums, categories, obra
+        // Crida concurrent per millorar rendiment
         const [albumsRes, categoriesRes, obraRes] = await Promise.all([
           axios.get("http://localhost:8085/api/portfoli/my", {
             headers: { Authorization: `Bearer ${token}` },
@@ -29,30 +42,36 @@ const EditarObraPage = () => {
           }),
         ]);
 
+        // Guardem les dades en estat
         setAlbums(albumsRes.data.data.albums || []);
         setCategories(categoriesRes.data.data || []);
         setObraData(obraRes.data.data);
       } catch (err) {
         console.error(err);
-        setError("No s'ha pogut carregar l'obra, albums o categories.");
+        setError(t("editObra.loadError"));
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [token, id]);
+  }, [token, id, t]);
 
-  if (loading) return <p>Carregant formulari...</p>;
+  // Mostrem carregant mentre les dades arriben
+  if (loading) return <p>{t("editObra.loading")}</p>;
+
+  // Mostrem error si falla alguna crida
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
     <div style={{ maxWidth: "800px", margin: "2rem auto" }}>
-      <h2>Editar Obra</h2>
+      <h2>{t("editObra.title")}</h2>
+
+      {/* Formulari reutilitzable per editar obra */}
       <ObraForm
-        initialData={obraData}
-        albums={albums}
-        categories={categories}
+        initialData={obraData} 
+        albums={albums}        
+        categories={categories} 
       />
     </div>
   );

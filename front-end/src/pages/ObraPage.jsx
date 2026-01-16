@@ -3,13 +3,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/obraPage.css";
 import BackButton from "../components/BackButton";
+import { useTranslation } from "react-i18next";
 
 /**
- * Mostra el detall d'una obra concreta amb informació, imatge i navegació dins l'àlbum.
+ * Mostra el detall d'una obra concreta amb informació,
+ * imatge i navegació dins l'àlbum.
  *
  * @returns {JSX.Element} La pàgina completa de l'obra
  */
 const ObraPage = () => {
+  // Hook de traducció
+  const { t } = useTranslation();
+
   // ID de l'obra des de la ruta
   const { obraId } = useParams(); 
   const navigate = useNavigate();
@@ -19,41 +24,42 @@ const ObraPage = () => {
   const [albumObres, setAlbumObres] = useState([]);
   const [error, setError] = useState(null);
 
-  // Funció reusable per obtenir la URL correcta de la imatge
+  /**
+   * Funció reusable per obtenir la URL correcta de la imatge de l'obra
+   *
+   * @param {string} url URL o nom del fitxer de la imatge
+   * @returns {string} URL completa per mostrar la imatge
+   */
   const getObraImage = (url) => {
-    // fallback
-    if (!url) return "/no-image.png"; 
-
-    // URL absoluta externa
+    if (!url) return "/no-image.png";
     if (url.startsWith("http")) return url;
-
-    // Ruta relativa que comença amb /storage
-    if (url.startsWith("/storage")) return `http://localhost:8085${url}`;
-
-    // Nom de fitxer
-    return `http://localhost:8085/storage/${url}`;
+    if (url.startsWith("/storage")) return `http://localhost:8085${url}`; 
+    return `http://localhost:8085/storage/${url}`; 
   };
 
-  // Carrega l'obra del backend quan canvia obraId
+  /**
+   * useEffect per carregar l'obra i les obres del seu àlbum
+   * quan canvia l'obraId
+   */
   useEffect(() => {
     const fetchObra = async () => {
       try {
         const res = await axios.get(`http://localhost:8085/api/obres/${obraId}`);
         setObra(res.data.data);
-        setAlbumObres(res.data.data.album.obres);
+        setAlbumObres(res.data.data.album.obres || []);
       } catch (err) {
-        setError("Obra no trobada");
+        setError(t("obra.notFound"));
       }
     };
 
     fetchObra();
-  }, [obraId]);
+  }, [obraId, t]);
 
   // Envia l'error a l'ErrorBoundary
   if (error) throw new Error(error);
 
   // Missatge de càrrega
-  if (!obra) return <p>Carregant obra...</p>;
+  if (!obra) return <p>{t("obra.loading")}</p>;
 
   // Obres anterior i següent per navegar dins l'àlbum
   const currentIndex = albumObres.findIndex((o) => o.id === obra.id);
@@ -65,7 +71,7 @@ const ObraPage = () => {
       {/* Botó per tornar al portfoli */}
       <BackButton
         to={`/portfoli/${obra.album.portfoli_id}`}
-        label="Tornar al portfoli"
+        label={t("obra.backToPortfolio")}
       />
 
       <div className="obra-page">
@@ -78,20 +84,24 @@ const ObraPage = () => {
         <div className="obra-info">
           <h1>{obra.titol}</h1>
           <p className="obra-views">
-            {obra.visualitzacions_count ?? obra.visualitzacions?.length} visualitzacions
+            {obra.visualitzacions_count ?? obra.visualitzacions?.length} {t("obra.views")}
           </p>
           <p>{obra.descripcio}</p>
           <p>
-            <strong>Àlbum:</strong> {obra.album.nom}
+            <strong>{t("obra.album")}:</strong> {obra.album.nom}
           </p>
 
           {/* Navegació entre obres de l'àlbum */}
           <div className="obra-nav">
             {prevObra && (
-              <button onClick={() => navigate(`/obres/${prevObra.id}`)}>Anterior</button>
+              <button onClick={() => navigate(`/obres/${prevObra.id}`)}>
+                {t("obra.prev")}
+              </button>
             )}
             {nextObra && (
-              <button onClick={() => navigate(`/obres/${nextObra.id}`)}>Següent</button>
+              <button onClick={() => navigate(`/obres/${nextObra.id}`)}>
+                {t("obra.next")}
+              </button>
             )}
           </div>
         </div>

@@ -1,65 +1,75 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNotification } from "../context/NotificationContext";
+import { useTranslation } from "react-i18next";
 
+/**
+ * Pàgina per recuperar la contrasenya
+ * Permet enviar un correu electrònic per generar un enllaç de recuperació
+ *
+ * @returns {JSX.Element} Formulari de recuperació de contrasenya
+ */
 const ForgotPasswordPage = () => {
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(""); 
-  const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
   const { showNotification } = useNotification();
 
+  // Estat per controlar email, errors i loading
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  /**
+   * Funció que gestiona l'enviament del formulari
+   * @param {React.FormEvent<HTMLFormElement>} e 
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Reset error
     setEmailError("");
 
+    // Validació bàsica del camp email
     if (!email.trim()) {
-      setEmailError("L’email és obligatori");
+      setEmailError(t("forgotPassword.emailRequired"));
       return;
     }
 
-    // Regex per validar format email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setEmailError("El format de l’email no és vàlid");
+      setEmailError(t("forgotPassword.invalidEmail"));
       return;
     }
 
     setLoading(true);
-  try {
-  const res = await axios.post("http://localhost:8085/api/forgot-password", {
-    email,
-  });
 
-  if (res.data.success) {
-    // neteja errors del camp
-    setEmailError(""); 
-    // modal o notificació
-    showNotification(res.data.message, "success"); 
-  } else {
-    setEmailError(res.data.message || "L’email no és vàlid");
-  }
-} catch (err) {
-  console.error(err);
-  showNotification("No s'ha pogut connectar amb el servidor", "error");
-}finally {
+    try {
+      // Crida API per recuperar la contrasenya
+      const res = await axios.post("http://localhost:8085/api/forgot-password", { email });
+
+      if (res.data.success) {
+        setEmailError("");
+        showNotification(res.data.message, "success");
+      } else {
+        setEmailError(res.data.message || t("forgotPassword.emailInvalid"));
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification(t("forgotPassword.serverError"), "error");
+    } finally {
       setLoading(false);
     }
   };
 
   return (
     <div className="form-container">
-      <h2>Recupera la contrasenya</h2>
+      <h2>{t("forgotPassword.title")}</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="email">Email *</label>
+          <label htmlFor="email">{t("forgotPassword.emailLabel")}</label>
           <input
             id="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            aria-label="Email"
+            aria-label={t("forgotPassword.emailLabel")}
             aria-describedby="email-error"
             required
           />
@@ -71,7 +81,7 @@ const ForgotPasswordPage = () => {
         </div>
 
         <button type="submit" disabled={loading}>
-          {loading ? "Enviant..." : "Envia correu"}
+          {loading ? t("forgotPassword.sending") : t("forgotPassword.sendButton")}
         </button>
       </form>
     </div>

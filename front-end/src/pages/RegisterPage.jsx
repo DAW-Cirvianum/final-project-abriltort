@@ -2,13 +2,22 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useNotification } from "../context/NotificationContext";
+import { useTranslation } from "react-i18next"; // <-- import i18n
 import "../styles/form.css";
 
+/**
+ * Pàgina de registre per a nous usuaris
+ * Permet registrar usuari amb nom, email, contrasenya i avatar opcional
+ *
+ * @returns {JSX.Element} Formulari de registre complet
+ */
 const RegisterPage = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
   const { showNotification } = useNotification();
+  const { t } = useTranslation(); 
 
+  // Estats del formulari
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +26,9 @@ const RegisterPage = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // Focus al primer camp amb error
+  /**
+   * Focus automàtic en el primer camp amb error
+   */
   useEffect(() => {
     if (errors.name) document.getElementById("register-name")?.focus();
     else if (errors.email) document.getElementById("register-email")?.focus();
@@ -27,16 +38,21 @@ const RegisterPage = () => {
       document.getElementById("register-password-confirm")?.focus();
   }, [errors]);
 
+  /**
+   * Envia el formulari de registre
+   * @param {React.FormEvent<HTMLFormElement>} e esdeveniment del submit
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
 
+    // Validació
     const newErrors = {};
-    if (!name.trim()) newErrors.name = "El nom és obligatori.";
-    if (!email.trim()) newErrors.email = "L’email és obligatori.";
-    if (!password) newErrors.password = "La contrasenya és obligatòria.";
+    if (!name.trim()) newErrors.name = t("register.errors.name");
+    if (!email.trim()) newErrors.email = t("register.errors.email");
+    if (!password) newErrors.password = t("register.errors.password");
     if (password !== passwordConfirmation)
-      newErrors.passwordConfirmation = "Les contrasenyes no coincideixen.";
+      newErrors.passwordConfirmation = t("register.errors.passwordConfirmation");
 
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
@@ -46,6 +62,7 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
+      // Preparar dades del formulari
       const formData = new FormData();
       formData.append("name", name);
       formData.append("email", email);
@@ -55,15 +72,16 @@ const RegisterPage = () => {
 
       const res = await register(formData);
 
+      // Gestió de notificacions segons èxit/error
       if (!res.success) {
-        showNotification(res.message || "No s'ha pogut registrar", "error");
+        showNotification(res.message || t("register.notifications.error"), "error");
       } else {
-        showNotification("Registre correcte!", "success");
+        showNotification(t("register.notifications.success"), "success");
         setTimeout(() => navigate("/login"), 1000);
       }
     } catch (err) {
       console.error(err);
-      showNotification("Hi ha hagut un error, torna-ho a provar", "error");
+      showNotification(t("register.notifications.exception"), "error");
     } finally {
       setLoading(false);
     }
@@ -71,11 +89,12 @@ const RegisterPage = () => {
 
   return (
     <div className="form-container">
-      <h2>Registrar-se</h2>
+      <h2>{t("register.title")}</h2>
 
       <form onSubmit={handleSubmit} encType="multipart/form-data" noValidate>
+        {/* Nom */}
         <div className="form-group">
-          <label htmlFor="register-name">Nom *</label>
+          <label htmlFor="register-name">{t("register.fields.name")} *</label>
           <input
             id="register-name"
             type="text"
@@ -86,14 +105,13 @@ const RegisterPage = () => {
             aria-describedby={errors.name ? "register-name-error" : undefined}
           />
           {errors.name && (
-            <p id="register-name-error" className="error">
-              {errors.name}
-            </p>
+            <p id="register-name-error" className="error">{errors.name}</p>
           )}
         </div>
 
+        {/* Email */}
         <div className="form-group">
-          <label htmlFor="register-email">Email *</label>
+          <label htmlFor="register-email">{t("register.fields.email")} *</label>
           <input
             id="register-email"
             type="email"
@@ -104,14 +122,13 @@ const RegisterPage = () => {
             aria-describedby={errors.email ? "register-email-error" : undefined}
           />
           {errors.email && (
-            <p id="register-email-error" className="error">
-              {errors.email}
-            </p>
+            <p id="register-email-error" className="error">{errors.email}</p>
           )}
         </div>
 
+        {/* Contrasenya */}
         <div className="form-group">
-          <label htmlFor="register-password">Password *</label>
+          <label htmlFor="register-password">{t("register.fields.password")} *</label>
           <input
             id="register-password"
             type="password"
@@ -119,21 +136,16 @@ const RegisterPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             aria-required="true"
             aria-invalid={errors.password ? "true" : "false"}
-            aria-describedby={
-              errors.password ? "register-password-error" : undefined
-            }
+            aria-describedby={errors.password ? "register-password-error" : undefined}
           />
           {errors.password && (
-            <p id="register-password-error" className="error">
-              {errors.password}
-            </p>
+            <p id="register-password-error" className="error">{errors.password}</p>
           )}
         </div>
 
+        {/* Confirmació contrasenya */}
         <div className="form-group">
-          <label htmlFor="register-password-confirm">
-            Confirmar Password *
-          </label>
+          <label htmlFor="register-password-confirm">{t("register.fields.passwordConfirmation")} *</label>
           <input
             id="register-password-confirm"
             type="password"
@@ -141,21 +153,16 @@ const RegisterPage = () => {
             onChange={(e) => setPasswordConfirmation(e.target.value)}
             aria-required="true"
             aria-invalid={errors.passwordConfirmation ? "true" : "false"}
-            aria-describedby={
-              errors.passwordConfirmation
-                ? "register-password-confirm-error"
-                : undefined
-            }
+            aria-describedby={errors.passwordConfirmation ? "register-password-confirm-error" : undefined}
           />
           {errors.passwordConfirmation && (
-            <p id="register-password-confirm-error" className="error">
-              {errors.passwordConfirmation}
-            </p>
+            <p id="register-password-confirm-error" className="error">{errors.passwordConfirmation}</p>
           )}
         </div>
 
+        {/* Avatar */}
         <div className="form-group">
-          <label htmlFor="register-avatar">Avatar (opcional)</label>
+          <label htmlFor="register-avatar">{t("register.fields.avatar")}</label>
           <input
             id="register-avatar"
             type="file"
@@ -164,8 +171,9 @@ const RegisterPage = () => {
           />
         </div>
 
+        {/* Botó enviar */}
         <button type="submit" className="form-button" disabled={loading}>
-          {loading ? "Registrant..." : "Registrar-se"}
+          {loading ? t("register.buttons.registering") : t("register.buttons.register")}
         </button>
       </form>
     </div>
