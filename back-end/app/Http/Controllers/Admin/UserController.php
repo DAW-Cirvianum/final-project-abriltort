@@ -28,14 +28,23 @@ class UserController extends Controller
             'name' => 'required|string|max:255|unique:users',
             'email' => 'required|email|unique:users',
             'rol' => 'required|in:admin,user',
-            'password' => 'nullable|string|min:6',
+            'password' => 'required|string|min:6|confirmed',
+            'imatge' => 'nullable|image|max:2048',
         ]);
+
+        // Gestionar imatge
+        if ($request->hasFile('imatge')) {
+            $avatarPath = $request->file('imatge')->store('avatars', 'public');
+        } else {
+            $avatarPath = 'avatars/default.png'; // opcional
+        }
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'rol' => $request->rol,
-            'password' => bcrypt($request->password ?? 'password'),
+            'password' => bcrypt($request->password),
+            'imatge' => $avatarPath,
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'Usuari creat correctament.');
@@ -54,9 +63,23 @@ class UserController extends Controller
             'name' => 'required|string|max:255|unique:users,name,' . $user->id,
             'email' => 'required|email|unique:users,email,' . $user->id,
             'rol' => 'required|in:admin,user',
+            'password' => 'nullable|string|min:6|confirmed',
+            'imatge' => 'nullable|image|max:2048',
         ]);
 
-        $user->update($request->only('name', 'email', 'rol'));
+        $data = $request->only('name', 'email', 'rol');
+
+        // Si han posat nova contrasenya
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        // Si han pujat nova imatge
+        if ($request->hasFile('imatge')) {
+            $data['imatge'] = $request->file('imatge')->store('avatars', 'public');
+        }
+
+        $user->update($data);
 
         return redirect()->route('admin.users.index')->with('success', 'Usuari actualitzat correctament.');
     }
@@ -66,5 +89,21 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('admin.users.index')->with('success', 'Usuari eliminat.');
+    }
+
+    //Canvi estat
+    public function toggle(User $user)
+    {
+// Evitar que l'admin es desactivi a si mateix
+    if ($user->id === auth()->id()) {
+        return redirect()->route('admin.users.index')
+                         ->with('error', 'No et pots desactivar a tu mateix.');
+    }
+
+    $user->active = ! $user->active;
+    $user->save();
+
+    return redirect()->route('admin.users.index')
+                     ->with('success', 'Usuari ' . ($user->active ? 'activat' : 'desactivat') . ' correctament.');
     }
 }

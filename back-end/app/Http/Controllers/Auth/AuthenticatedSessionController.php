@@ -24,11 +24,32 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        // Autenticar l'usuari
+    $request->authenticate();
 
-        $request->session()->regenerate();
+    $user = Auth::user(); // obtenir usuari autenticat
 
-        return redirect()->intended(route('dashboard', absolute: false));
+    // Comprovar si és admin
+    if (Auth::user()->rol !== 'admin') {
+        Auth::logout(); // tanca la sessió si no és admin
+        return redirect()->route('login')->withErrors([
+            'email' => 'Només els administradors poden iniciar sessió.',
+        ]);
+    }
+
+    // Comprovar si està actiu
+    if (!$user->active) {
+        Auth::logout();
+        return redirect()->route('login')->withErrors([
+            'email' => 'Aquest usuari està desactivat.',
+        ]);
+    }
+
+    // Regenerar sessió i redirigir a dashboard
+    $request->session()->regenerate();
+
+    // Redirigir a l'admin dashboard
+    return redirect()->intended(route('admin.dashboard'));
     }
 
     /**

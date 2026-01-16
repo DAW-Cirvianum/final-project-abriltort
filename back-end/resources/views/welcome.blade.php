@@ -6,5 +6,7 @@
 </head>
 <body>
     <h1>Welcome</h1>
+
+    <a href="{{ route('login') }}">Anar al login</a>
 </body>
 </html>

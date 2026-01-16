@@ -1,48 +1,87 @@
-<x-app-layout>
-    <div class="bg-white shadow-md rounded-lg p-6">
+<x-admin-layout>
+    @if(session('success'))
+    <div class="mb-6 bg-green-100 text-green-900 px-4 py-3 rounded">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if(session('error'))
+    <div class="mb-6 bg-red-100 text-red-900 px-4 py-3 rounded">
+        {{ session('error') }}
+    </div>
+    @endif
+
+    <div class="bg-white shadow rounded-lg p-6">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold text-gray-900">Usuaris</h1>
-            <a href="{{ route('admin.users.create') }}" class="bg-gray-900 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
-                Crear Usuari
+
+            <a href="{{ route('admin.users.create') }}"
+                class="bg-gray-900 text-white px-4 py-2 rounded hover:bg-gray-700">
+                + Crear usuari
             </a>
         </div>
 
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gray-100 text-left text-gray-700">
+                    <th class="p-3">ID</th>
+                    <th class="p-3">Nom</th>
+                    <th class="p-3">Email</th>
+                    <th class="p-3">Rol</th>
+                    <th class="p-3">Estat</th>
+                    <th class="p-3 text-right">Accions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($users as $user)
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="p-3">{{ $user->id }}</td>
+                    <td class="p-3">{{ $user->name }}</td>
+                    <td class="p-3">{{ $user->email }}</td>
+                    <td class="p-3 capitalize">{{ $user->rol }}</td>
 
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-300">
-                <thead class="bg-gray-800 text-white">
-                    <tr>
-                        <th class="px-4 py-2 text-left">ID</th>
-                        <th class="px-4 py-2 text-left">Nom</th>
-                        <th class="px-4 py-2 text-left">Email</th>
-                        <th class="px-4 py-2 text-left">Rol</th>
-                        <th class="px-4 py-2 text-left">Accions</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @foreach($users as $user)
-                        <tr>
-                            <td class="px-4 py-2">{{ $user->id }}</td>
-                            <td class="px-4 py-2">{{ $user->name }}</td>
-                            <td class="px-4 py-2">{{ $user->email }}</td>
-                            <td class="px-4 py-2">{{ $user->rol }}</td>
-                            <td class="px-4 py-2 flex space-x-2">
-                                <a href="{{ route('admin.users.edit', $user) }}" class="bg-gray-900 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm">Editar</a>
-                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-sm">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                    {{-- Estat --}}
+                    <td class="p-3">
+                        @if($user->active)
+                        <span class="text-green-600 font-semibold">Actiu</span>
+                        @else
+                        <span class="text-red-600 font-semibold">Inactiu</span>
+                        @endif
+                    </td>
+
+                    {{-- Accions --}}
+                    <td class="p-3 text-right space-x-3">
+                        <a href="{{ route('admin.users.edit', $user) }}"
+                            class="text-gray-700 hover:text-black">
+                            Editar
+                        </a>
+
+                        {{-- Activar / Desactivar --}}
+                        <form method="POST"
+                            action="{{ route('admin.users.toggle', $user) }}"
+                            class="inline">
+                            @csrf
+                            @method('PATCH')
+                            <button
+                                class="text-sm font-semibold
+                                {{ $user->active ? 'text-red-600 hover:text-red-800' : 'text-green-600 hover:text-green-800' }}">
+                                {{ $user->active ? 'Desactivar' : 'Activar' }}
+                            </button>
+                        </form>
+
+                        {{-- Eliminar --}}
+                        <form action="{{ route('admin.users.destroy', $user) }}"
+                            method="POST" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button class="text-gray-500 hover:text-black">
+                                Eliminar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
-</x-app-layout>
+</x-admin-layout>
