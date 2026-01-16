@@ -1,4 +1,4 @@
-/* ================== OBRES SECTION ================== */
+/* OBRES SECTION */
 .obres-section {
   padding: 4rem 2rem;
   max-width: 1200px;
@@ -17,7 +17,7 @@
   color: #555;
 }
 
-/* ================== GRID OBRES ================== */
+/* GRID OBRES */
 .obres-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* cards responsives */
@@ -25,7 +25,7 @@
   margin-bottom: 3rem;
 }
 
-/* ================== CARD OBRA ================== */
+/* CARD OBRA */
 .obra-card {
   background: #f3f3f3;
   border-radius: 12px;
@@ -64,7 +64,7 @@
   color: #777;
 }
 
-/* ================== BOTÓ VEURE MÉS ================== */
+/* BOTÓ VEURE MÉS */
 .veure-mes {
   padding: 0.8rem 2rem;
   border: none;
@@ -80,7 +80,7 @@
   background: #333;
 }
 
-/* ================== RESPONSIVE ================== */
+/* RESPONSIVE */
 @media (max-width: 1024px) {
   .obres-grid {
     grid-template-columns: repeat(2, 1fr);

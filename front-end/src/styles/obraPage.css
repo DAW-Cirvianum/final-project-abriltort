@@ -1,6 +1,6 @@
 .obra-page {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr; /* Layout: imatge + info */
   gap: 2rem;
   max-width: 1200px;
   margin: 2rem auto;
@@ -9,7 +9,7 @@
 .obra-image img {
   width: 100%;
   border-radius: 12px;
-  object-fit: contain;
+  object-fit: contain; /* la imatge s'adapta sense deformar */
 }
 
 .obra-info {
@@ -38,7 +38,7 @@
 }
 
 .obra-wrapper {
-  position: relative;
+  position: relative; /* per posicionar elements dins */
   margin-top: 4rem;
   padding: 2rem;
 }

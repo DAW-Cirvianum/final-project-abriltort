@@ -1,6 +1,5 @@
-/* editarPerfil.css */
-
 .editar-perfil-page {
+  /* Contenidor principal: mida, centració i estil de targeta */
   max-width: 600px;
   margin: 50px auto;
   padding: 30px;
@@ -36,12 +35,14 @@
 }
 
 .editar-perfil-form input:focus {
+  /* Estil quan el camp està enfocat (accessibilitat) */
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
 
 .editar-perfil-form button {
+  /* Estil del botó: color, padding i transició */
   padding: 12px;
   background-color: #007bff;
   color: #fff;

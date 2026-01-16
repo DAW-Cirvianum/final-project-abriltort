@@ -1,11 +1,11 @@
 .portfoli-wrapper {
   max-width: 1200px;
-  margin: 4rem auto 2rem auto; 
+  margin: 4rem auto 2rem auto; /* centrat i amb separació superior/inferior */
 }
 
 .portfoli-content {
   display: flex;
-  gap: 2rem;
+  gap: 2rem; /* espai entre columnes */
 }
 
 .albums-list {
@@ -17,7 +17,7 @@
 }
 
 .flex-1 {
-  flex: 1;
+  flex: 1; /* utilitat per fer que un element ocupi l'espai disponible */
 }
 
 .error {

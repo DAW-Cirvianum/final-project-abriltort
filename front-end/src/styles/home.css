@@ -1,4 +1,4 @@
-/* ================== RESET GENERAL ================== */
+/* RESET GENERAL */
 *,
 *::before,
 *::after {
@@ -12,7 +12,7 @@ html, body {
   width: 100%;
 }
 
-/* ================== HERO ================== */
+/* HERO */
 .hero {
   display: flex;
   justify-content: space-between;
@@ -79,7 +79,7 @@ html, body {
   border-radius: 10px;
 }
 
-/* ================== OBRES SECTION ================== */
+/* OBRES SECTION */
 .obres-section {
   padding: 4rem 2rem;
   max-width: 1200px;
@@ -157,7 +157,7 @@ html, body {
   background: #333;
 }
 
-/* ================== ARTISTES SECTION ================== */
+/* ARTISTES SECTION */
 .artistes-section {
   padding: 4rem 2rem;
   max-width: 1200px;
@@ -224,7 +224,7 @@ html, body {
   color: #777;
 }
 
-/* ================== VALOR SECTION ================== */
+/* VALOR SECTION */
 .valor-section {
   background: #f9f9f9;
   padding: 4rem 2rem;
@@ -285,7 +285,7 @@ html, body {
   line-height: 1.5;
 }
 
-/* ================== RESPONSIVE ================== */
+/* RESPONSIVE */
 @media (max-width: 1024px) {
   /* Hero passa a columna */
   .hero {

@@ -5,6 +5,7 @@
 }
 
 .album-form {
+  /* Estil del formulari: fons blanc, padding, radius i ombra */
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -42,6 +43,7 @@
 }
 
 .album-form button {
+  /* Estil del botó: color, padding, radius i transicions */
   padding: 12px;
   font-size: 1rem;
   font-weight: 600;

@@ -8,10 +8,10 @@
   background: linear-gradient(90deg, #222, #444);
   color: #fff;
   width: 100%;
-  position: fixed;
+  position: fixed; /* Manté la navbar fixa a la part superior */
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 1000; /* Per sobre la resta de contingut */
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
@@ -21,7 +21,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-   padding-right: 50px;
+  padding-right: 50px;
 }
 
 /* Esquerra i dreta */
@@ -41,7 +41,7 @@
 
 .navbar a:hover {
   color: #ffcc00;
-  transform: scale(1.05);
+  transform: scale(1.05); /* Efecte hover suau */
 }
 
 .navbar-avatar {
@@ -60,7 +60,7 @@
   cursor: pointer;
 }
 
-/* Icona hamburguer */
+/* Icona hamburguer (només visible en mòbil) */
 .hamburger {
   display: none; 
   font-size: 2rem;
@@ -70,23 +70,23 @@
 /* Responsive mòbil */
 @media (max-width: 768px) {
   .hamburger {
-    display: block;
+    display: block; /* Mostra l'hamburger en mòbil */
   }
 
   .navbar-menu {
-    display: none;
+    display: none; /* Amaga el menú fins que es faci clic */
     flex-direction: column;
     width: 100%;
     background-color: #333;
     position: absolute;
-    top: 70px;
+    top: 70px; /* Just sota la navbar */
     left: 0;
     padding: 10px 0;
     border-radius: 0 0 8px 8px;
   }
 
   .navbar-menu.open {
-    display: flex;
+    display: flex; /* Mostra el menú quan té la classe .open */
   }
 
   .navbar-left,

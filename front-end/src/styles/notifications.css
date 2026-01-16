@@ -1,5 +1,5 @@
 .notification {
-  position: fixed;
+  position: fixed; /* fixada a la pantalla */
   top: 1.5rem;
   right: 1.5rem;
   padding: 1rem 1.5rem;
@@ -7,8 +7,8 @@
   color: white;
   font-weight: 500;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 9999;
-  animation: fadeSlide 0.3s ease;
+  z-index: 9999; /* per sobre de tot */
+  animation: fadeSlide 0.3s ease; /* animació d'entrada */
 }
 
 .notification-success {

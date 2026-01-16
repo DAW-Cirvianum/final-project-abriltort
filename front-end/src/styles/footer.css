@@ -1,4 +1,5 @@
 .footer {
+  /* Estil del footer: fons fosc, text blanc i padding */
   background: #222;
   color: #fff;
   padding: 3rem 2rem 1rem 2rem;
@@ -7,6 +8,7 @@
 }
 
 .footer-container {
+  /* Contenidor central: mida màxima, centració i layout flex */
   max-width: 1200px; 
   margin: 0 auto;    
   display: flex;

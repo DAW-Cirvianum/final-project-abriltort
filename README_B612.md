@@ -154,7 +154,7 @@ Conté el registre de visualitzacions de les obres pels usuaris.
 | `created_at` | TIMESTAMP | Data de creació |
 | `updated_at` | TIMESTAMP | Data de la darrera actualització |
 
-> [Diagrama de base de dades](https://drive.google.com/file/d/1uTseilhD74vkWDuc9xq2MGI5oxJEnDKu/view?usp=sharing) 
+> [Diagrama de base de dades](https://drive.google.com/file/d/189P4ORvR6WMAHa5BlEsa3gmWtaYsIVcd/view?usp=sharing) 
 
 
 ---
@@ -166,7 +166,7 @@ Conté el registre de visualitzacions de les obres pels usuaris.
 - **albums <-> obres**: Un àlbum pot contenir múltiples obres (relació 1:N)
 - **categories <-> obres**: Una categoria pot tenir múltiples obres (relació 1:N)
 - **obres <-> tags**: Una obra pot tenir múltiples etiquetes (relació N:N)
-- **users <-> visualitzacions ↔ obres**: Un usuari pot visualitzar múltiples obres, i cada obra pot ser visualitzada per múltiples usuaris (relació N:N)
+- **users <-> visualitzacions <-> obres**: Un usuari pot visualitzar múltiples obres, i cada obra pot ser visualitzada per múltiples usuaris (relació N:N)
 
 ---
 

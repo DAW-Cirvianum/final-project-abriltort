@@ -1,5 +1,6 @@
 /* Hero general */
 .hero {
+  /* Layout principal del hero: dos columnes amb espai entre elles */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -45,6 +46,7 @@
 /* Responsive per mòbils: una sola columna */
 @media (max-width: 768px) {
   .hero {
+    /* En mòbil, passa a una sola columna */
     flex-direction: column; /* passa a columna */
     align-items: center;    /* centra contingut */
     text-align: center;     /* centra textos */
