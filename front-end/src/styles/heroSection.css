@@ -1,26 +1,75 @@
+/* Hero general */
 .hero {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 60px 20px;
+  gap: 20px;
+  flex-wrap: wrap; /* permet que els elements passin a la següent línia */
 }
 
+/* Columna esquerra */
 .hero-left h1 {
   font-size: 3rem;
+  margin-bottom: 20px;
 }
 
+.hero-left p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.hero-left button {
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.hero-left button:hover {
+  background-color: #0056b3;
+}
+
+/* Columna dreta */
 .hero-right img {
   width: 100%;
   max-width: 500px;
   border-radius: 10px;
+  object-fit: cover;
 }
 
+/* Responsive per mòbils: una sola columna */
 @media (max-width: 768px) {
   .hero {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: column; /* passa a columna */
+    align-items: center;    /* centra contingut */
+    text-align: center;     /* centra textos */
+    padding: 40px 10px;
   }
+
+  .hero-left h1 {
+    font-size: 2rem;
+  }
+
+  .hero-left p {
+    font-size: 1rem;
+  }
+
   .hero-right {
     margin-top: 20px;
+    width: 100%; /* imatge ocupa tota l'amplada disponible */
+  }
+
+  .hero-right img {
+    max-width: 100%;
+  }
+
+  .hero-left button {
+    width: 100%; /* botó ocupa tota l'amplada */
+    padding: 12px 0;
   }
 }

@@ -22,7 +22,7 @@ class LoginController extends Controller
             'password' => ['required','string'],
         ]);
 
-        // Afegim condició que només admin pot loguejar
+        // Afegir condició que només admin pot loguejar
         if (Auth::attempt(array_merge($credentials, ['rol' => 'admin']))) {
             $request->session()->regenerate();
             return redirect()->intended(route('admin.dashboard'));

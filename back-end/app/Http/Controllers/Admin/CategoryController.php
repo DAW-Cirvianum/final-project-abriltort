@@ -10,6 +10,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
+        // Obté totes les categories
         $categories = Categoria::all();
         return view('admin.categories.index', compact('categories'));
     }
@@ -22,6 +23,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            // Validació: nom obligatori i únic
             'nom' => 'required|string|max:255|unique:categories,nom',
             'descripcio' => 'nullable|string|max:1000',
         ]);
@@ -32,7 +34,8 @@ class CategoryController extends Controller
         ]);
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'Categoria creada correctament');
+            // Redirigeix amb missatge d'èxit
+            ->with('success', 'Categoria creada correctament');
     }
 
     public function edit(Categoria $category)
@@ -43,6 +46,7 @@ class CategoryController extends Controller
     public function update(Request $request, Categoria $category)
     {
         $request->validate([
+            // Validació: nom únic excepte el mateix
             'nom' => 'required|string|max:255|unique:categories,nom,' . $category->id,
             'descripcio' => 'nullable|string|max:1000',
         ]);
@@ -53,14 +57,17 @@ class CategoryController extends Controller
         ]);
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'Categoria actualitzada correctament');
+            // Redirigeix amb missatge d'èxit
+            ->with('success', 'Categoria actualitzada correctament');
     }
 
     public function destroy(Categoria $category)
     {
+        // Elimina la categoria
         $category->delete();
 
         return redirect()->route('admin.categories.index')
-                         ->with('success', 'Categoria eliminada correctament');
+            // Redirigeix amb missatge d'èxit
+            ->with('success', 'Categoria eliminada correctament');
     }
 }

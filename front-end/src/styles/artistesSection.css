@@ -1,78 +1,22 @@
-.artistes-section {
-  padding: 4rem 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.artistes-section .container {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-/* Columna esquerra */
-.left-col {
-  flex: 1 1 400px;
-}
-
-.left-col h2 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.left-col p {
-  font-size: 1.1rem;
-  color: #555;
-}
-
-/* Columna dreta */
-.right-col {
-  flex: 1 1 400px;
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.artista-card {
-  background: #f3f3f3;
-  border-radius: 12px;
-  padding: 1rem;
-  text-align: center;
-  /* 3 cartes per fila */
-  width: calc(33% - 0.66rem); 
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.artista-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.artista-card img {
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-  border-radius: 50%;
-  margin-bottom: 0.5rem;
-}
-
-.artista-card h3 {
-  margin: 0.5rem 0 0.25rem;
-  font-size: 1.1rem;
-}
-
-.artista-card p {
-  font-size: 0.9rem;
-  color: #777;
-}
-
-/* Responsive */
-@media (max-width: 1024px) {
-  .artistes-section .container {
-    flex-direction: column;
+/* Responsive Hero per mòbils */
+@media (max-width: 768px) {
+  .hero-media {
+    width: 100%;
+    margin-top: 20px;
   }
 
-  .artista-card {
+  .hero-media img,
+  .hero-placeholder {
+    max-width: 100%;
     width: 100%;
+    max-height: 200px;  /* més petita en mòbils */
+    height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-media img,
+  .hero-placeholder {
+    max-height: 150px;  /* encara més petita en mòbils petits */
   }
 }

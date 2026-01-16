@@ -1,4 +1,4 @@
-/* obres section */
+/* ================== OBRES SECTION ================== */
 .obres-section {
   padding: 4rem 2rem;
   max-width: 1200px;
@@ -17,15 +17,15 @@
   color: #555;
 }
 
-/* grid obres */
+/* ================== GRID OBRES ================== */
 .obres-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* cards responsives */
+  gap: 1.5rem;
   margin-bottom: 3rem;
 }
 
-/* Card Obra */
+/* ================== CARD OBRA ================== */
 .obra-card {
   background: #f3f3f3;
   border-radius: 12px;
@@ -33,6 +33,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .obra-card:hover {
@@ -42,8 +43,10 @@
 
 .obra-card img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 180px; /* alçada fixa i uniforme */
   object-fit: cover;
+  display: block;
+  border-bottom: 1px solid #ddd;
 }
 
 .obra-info {
@@ -52,7 +55,7 @@
 }
 
 .obra-info h3 {
-  margin: 0;
+  margin: 0 0 6px 0;
   font-size: 1.1rem;
 }
 
@@ -61,7 +64,7 @@
   color: #777;
 }
 
-/* boto veure més */
+/* ================== BOTÓ VEURE MÉS ================== */
 .veure-mes {
   padding: 0.8rem 2rem;
   border: none;
@@ -70,21 +73,32 @@
   font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
+  margin-top: 2rem;
 }
 
 .veure-mes:hover {
   background: #333;
 }
 
-/* responsive obres */
+/* ================== RESPONSIVE ================== */
 @media (max-width: 1024px) {
   .obres-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem;
+  }
+
+  .obra-card img {
+    height: 160px;
   }
 }
 
 @media (max-width: 600px) {
   .obres-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* una columna: cartes l’una sota l’altra */
+    gap: 1rem;
+  }
+
+  .obra-card img {
+    height: 140px;
   }
 }

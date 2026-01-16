@@ -1,12 +1,25 @@
+/* ================== RESET GENERAL ================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-/* HERO */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* ================== HERO ================== */
 .hero {
-  /* background: #f9f9f9; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 60px 80px;
   gap: 40px;
+  width: 100%;
 }
 
 .hero-text {
@@ -27,21 +40,46 @@
   padding: 12px 24px;
   font-size: 1rem;
   cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.hero-text button:hover {
+  background-color: #0056b3;
 }
 
 .hero-media {
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-media img {
+  width: 100%;
+  max-width: 500px;
+  max-height: 300px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
 .hero-placeholder {
-  height: 300px;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 16/9;
+  max-height: 300px;
   background: #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
 }
 
-/* OBRES SECTION */
+/* ================== OBRES SECTION ================== */
 .obres-section {
   padding: 4rem 2rem;
   max-width: 1200px;
@@ -60,22 +98,21 @@
   color: #555;
 }
 
-/* GRID OBRES */
 .obres-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
   margin-bottom: 3rem;
 }
 
-/* CARD OBRA */
 .obra-card {
   background: #f3f3f3;
   border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .obra-card:hover {
@@ -85,8 +122,9 @@
 
 .obra-card img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 180px;
   object-fit: cover;
+  display: block;
 }
 
 .obra-info {
@@ -104,7 +142,6 @@
   color: #777;
 }
 
-/* BOTÓ VEURE MÉS */
 .veure-mes {
   padding: 0.8rem 2rem;
   border: none;
@@ -113,21 +150,238 @@
   font-weight: 600;
   border-radius: 6px;
   cursor: pointer;
+  margin-top: 2rem;
 }
 
 .veure-mes:hover {
   background: #333;
 }
 
-/* RESPONSIVE */
+/* ================== ARTISTES SECTION ================== */
+.artistes-section {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.artistes-section .container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.left-col {
+  flex: 1 1 400px;
+}
+
+.left-col h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.left-col p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+.right-col {
+  flex: 1 1 400px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.artista-card {
+  background: #f3f3f3;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.artista-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.artista-card img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 0.5rem;
+}
+
+.artista-card h3 {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.artista-card p {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* ================== VALOR SECTION ================== */
+.valor-section {
+  background: #f9f9f9;
+  padding: 4rem 2rem;
+}
+
+.valor-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.valor-text {
+  flex: 1 1 400px;
+}
+
+.valor-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.valor-text p {
+  font-size: 1.1rem;
+  color: #555;
+  line-height: 1.6;
+}
+
+.valor-blocs {
+  flex: 1 1 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.bloc {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.bloc:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.bloc h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.bloc p {
+  color: #666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* ================== RESPONSIVE ================== */
 @media (max-width: 1024px) {
+  /* Hero passa a columna */
+  .hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .hero-text h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-text p {
+    font-size: 1rem;
+  }
+
+  .hero-text button {
+    width: 100%;
+    padding: 12px 0;
+  }
+
+  .hero-media {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .hero-media img,
+  .hero-placeholder {
+    max-width: 100%;
+    width: 100%;
+    max-height: 200px;
+    height: auto;
+  }
+
+  /* Obres grid */
   .obres-grid {
-    grid-template-columns: repeat(2, 1fr); 
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Artistes passa a columna */
+  .artistes-section .container {
+    flex-direction: column;
+  }
+
+  .left-col {
+    width: 100%;
+    text-align: center;
+  }
+
+  .right-col {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Valor */
+  .valor-container {
+    flex-direction: column;
+    gap: 2rem;
   }
 }
 
 @media (max-width: 600px) {
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+
+  .hero-text p {
+    font-size: 0.95rem;
+  }
+
+  .hero-media img,
+  .hero-placeholder {
+    max-height: 150px;
+  }
+
   .obres-grid {
     grid-template-columns: 1fr;
+  }
+
+  .right-col {
+    grid-template-columns: 1fr;
+  }
+
+  .valor-text h2 {
+    font-size: 2rem;
+  }
+
+  .valor-text p,
+  .bloc p {
+    font-size: 0.95rem;
+  }
+
+  .artistes-section {
+    padding: 2rem 1rem;
   }
 }
