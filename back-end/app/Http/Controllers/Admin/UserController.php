@@ -36,7 +36,7 @@ class UserController extends Controller
         if ($request->hasFile('imatge')) {
             $avatarPath = $request->file('imatge')->store('avatars', 'public');
         } else {
-            $avatarPath = 'avatars/default.png'; // opcional
+            $avatarPath = 'avatars/default.png';
         }
 
         User::create([
@@ -94,16 +94,16 @@ class UserController extends Controller
     //Canvi estat
     public function toggle(User $user)
     {
-// Evitar que l'admin es desactivi a si mateix
-    if ($user->id === auth()->id()) {
+        // Evitar que l'admin es desactivi a si mateix
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.users.index')
+                ->with('error', 'No et pots desactivar a tu mateix.');
+        }
+
+        $user->active = ! $user->active;
+        $user->save();
+
         return redirect()->route('admin.users.index')
-                         ->with('error', 'No et pots desactivar a tu mateix.');
-    }
-
-    $user->active = ! $user->active;
-    $user->save();
-
-    return redirect()->route('admin.users.index')
-                     ->with('success', 'Usuari ' . ($user->active ? 'activat' : 'desactivat') . ' correctament.');
+            ->with('success', 'Usuari ' . ($user->active ? 'activat' : 'desactivat') . ' correctament.');
     }
 }

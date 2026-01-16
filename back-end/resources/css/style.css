@@ -1,0 +1,108 @@
+/* Estils generals */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f3f4f6; /* gris clar */
+    color: #111827; /* text fosc */
+    margin: 0;
+    padding: 0;
+}
+
+/* Navbar */
+nav {
+    background-color: #111827; /* gris fosc */
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    margin-left: 1rem;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Botons */
+button, .btn {
+    background-color: #111827;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button:hover, .btn:hover {
+    background-color: #374151;
+}
+
+/* Formularis */
+input, select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+}
+
+/* Taules */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: white;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+tr:hover {
+    background-color: #f9fafb;
+}
+
+th {
+    background-color: #f3f4f6;
+    font-weight: bold;
+}
+
+/* Missatges d’èxit/error */
+.alert-success {
+    background-color: #d1fae5;
+    color: #065f46;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+.alert-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+}
+
+/* Centrar formularis */
+.form-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}

@@ -69,6 +69,12 @@ class AuthController extends Controller
             ], 401);
         }
 
+        if (!$user->active) {
+            return response()->json([
+                'message' => 'Aquest usuari està desactivat'
+            ], 403);
+        }
+
         // Creem token
         $token = $user->createToken('api-token')->plainTextToken;
 
